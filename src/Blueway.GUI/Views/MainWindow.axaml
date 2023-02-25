@@ -1,0 +1,98 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ProjectKolme.GUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Width="600" Height="500"
+		d:DesignWidth="{Binding Width}" d:DesignHeight="{Binding Height}"
+        x:Class="ProjectKolme.GUI.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Project Kolme"
+		TransparencyLevelHint="AcrylicBlur"
+        Background="{Binding BackColor}"
+		Foreground="{Binding ForeColor}"
+		ExtendClientAreaToDecorationsHint="True"
+		HasSystemDecorations="False"
+		PointerPressed="TitleMove"
+		ExtendClientAreaChromeHints="NoChrome">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+
+	<Grid Name="Content" RowDefinitions="40,*,Auto">
+		<Grid Name="TitleBar" Grid.Row="0" ColumnDefinitions="*,Auto">
+			<Grid.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</Grid.Styles>
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5" PointerPressed="TitleMove">
+				<Image Margin="5" VerticalAlignment="Center" Source="/Assets/avalonia-logo.ico" PointerPressed="TitleMove" />
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" FontWeight="UltraBlack" Text="{Binding AppName}" PointerPressed="TitleMove" />
+				<TextBlock Margin="5" Text="{Binding AppVersion}" PointerPressed="TitleMove" />
+			</StackPanel>
+			<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" PointerPressed="TitleMove">
+				<Button Click="G_Clicked">
+					<Panel>
+						<Image Source="/Assets/settings-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/settings-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
+					</Panel>
+				</Button>
+				<Button Click="U_Clicked">
+					<Panel>
+						<Image Source="/Assets/minimize-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/minimize-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
+					</Panel>
+				</Button>
+				<Button Click="S_Clicked">
+					<Panel>
+						<Image Source="/Assets/maximize-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/maximize-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
+					</Panel>
+				</Button>
+				<Button Click="X_Clicked">
+					<Panel>
+						<Image Source="/Assets/close-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/close-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
+					</Panel>
+				</Button>
+			</StackPanel>
+		</Grid>
+
+		<Carousel Grid.Row="1" Name="ContentCarousel">
+			<Carousel.PageTransition>
+				<CompositePageTransition>
+					<CrossFade Duration="0:00:00.200" />
+				</CompositePageTransition>
+			</Carousel.PageTransition>
+			<Carousel.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</Carousel.Styles>
+		</Carousel>
+
+		<StackPanel Name="Navigation" Margin="5" Grid.Row="2" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
+			<StackPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</StackPanel.Styles>
+			<Button Content="{Binding Back}" Name="Back" Click="BackPressed" />
+			<Button Content="{Binding Forward}" Name="Forward" Click="ForwardPressed" />
+			<Button Content="{Binding Cancel}" Name="Cancel" Click="CancelPressed" />
+			<Button Content="{Binding OK}" Name="OK" Click="OKPressed" />
+		</StackPanel>
+	</Grid>
+</Window>
