@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="Blueway.Views.Home">
+	<Grid ColumnDefinitions="*,*" RowDefinitions="25,*,25">
+
+		<StackPanel Grid.Row="1" Spacing="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="25 0 10 0" Orientation="Vertical" Grid.Column="0">
+			<TextBlock FontSize="25" FontWeight="Black" Text="Welcome!" />
+			<Button Click="NewBackup">
+				<StackPanel Orientation="Horizontal">
+					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+					<TextBlock Text="New backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+				</StackPanel>
+			</Button>
+			<Button Click="CustomBackup">
+				<StackPanel Orientation="Horizontal">
+					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+					<TextBlock Text="Custom backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+				</StackPanel>
+			</Button>
+
+			<Button Click="ApplyBackup">
+				<StackPanel Orientation="Horizontal">
+					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+					<TextBlock Text="Apply backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+				</StackPanel>
+			</Button>
+
+			<Button Click="InstallApp">
+				<StackPanel Orientation="Horizontal">
+					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+					<TextBlock Text="Install something" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+				</StackPanel>
+			</Button>
+
+			<Button Click="AutoBackups">
+				<StackPanel Orientation="Horizontal">
+					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+					<TextBlock Text="Automatic backups" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+				</StackPanel>
+			</Button>
+		</StackPanel>
+		<Grid Grid.Row="1" Grid.Column="1" RowDefinitions="Auto,*" Margin="10 0 25 0">
+			<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+				<TextBlock VerticalAlignment="Center" Text="Recent backup(s)" FontSize="20" FontWeight="Bold" />
+				<Button Content="Clear..." VerticalAlignment="Center" />
+			</StackPanel>
+			<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+				<StackPanel Orientation="Vertical" Spacing="5" Name="RecentBackups">
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+	</Grid>
+</UserControl>
