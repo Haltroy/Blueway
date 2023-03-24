@@ -10,5 +10,6 @@ namespace Blueway.Views
     public class AUC : UserControl
     {
         public MainWindow? MainWindow { get; set; }
+        public string? Title { get; set; }
     }
 }

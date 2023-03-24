@@ -4,106 +4,64 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:vm="using:Blueway.ViewModels"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-mc:Ignorable="d" Width="600" Height="500" d:DesignWidth="{Binding Width}" d:DesignHeight="{Binding Height}"
+mc:Ignorable="d" Width="700" Height="600" d:DesignWidth="{Binding Width}" d:DesignHeight="{Binding Height}"
 x:Class="Blueway.Views.MainWindow"
 Icon="/Assets/blueway-logo.ico"
 Title="{Binding AppName}"
 TransparencyLevelHint="{Binding TransparencyLevel}"
 	Background="{Binding BackColor}"
-	Foreground="{Binding ForeColor}"
-	ExtendClientAreaToDecorationsHint="True"
-	SystemDecorations="None"
-	ExtendClientAreaChromeHints="NoChrome">
+	Foreground="{Binding ForeColor}">
 
 	<Design.DataContext>
 		<vm:MainWindowViewModel />
 	</Design.DataContext>
 
-	<DockPanel LastChildFill="true">
-		<DockPanel LastChildFill="true" DockPanel.Dock="Top" Background="#01000000" Height="5">
-			<Panel Cursor="TopLeftCorner" DockPanel.Dock="Left" Background="#01000000" Width="5" Height="5" PointerPressed="NorthWestDrag" />
-			<Panel Cursor="TopRightCorner" DockPanel.Dock="Right" Background="#01000000" Width="5" Height="5" PointerPressed="NorthEastDrag" />
-			<Panel Cursor="TopSide" Background="#01000000" Height="5" PointerPressed="NorthDrag" />
-		</DockPanel>
-		<DockPanel LastChildFill="true" DockPanel.Dock="Bottom" Background="#01000000" Height="5">
-			<Panel Cursor="BottomLeftCorner" DockPanel.Dock="Left" Background="#01000000" Width="5" Height="5" PointerPressed="SouthWestDrag" />
-			<Panel Cursor="BottomRightCorner" DockPanel.Dock="Right" Background="#01000000" Width="5" Height="5" PointerPressed="SouthEastDrag" />
-			<Panel Cursor="BottomSide" Background="#01000000" Height="5" PointerPressed="SouthDrag" />
-		</DockPanel>
-		<Panel Cursor="LeftSide" DockPanel.Dock="Left" Background="#01000000" Width="5" PointerPressed="WestDrag" />
-		<Panel Cursor="RightSide" DockPanel.Dock="Right" Background="#01000000" Width="5" PointerPressed="EastDrag" /> 
-		<Grid Name="ContentGrid" RowDefinitions="40,*,Auto">
-			<Grid Name="TitleBar" Grid.Row="0" ColumnDefinitions="*,*,Auto">
-				<Grid.Styles>
-					<Style Selector="Button">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
-					</Style>
-					<Style Selector="Button:pointerover /template/ ContentPresenter">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
-					</Style>
-				</Grid.Styles>
-				<StackPanel Grid.Column="0" Orientation="Horizontal" Background="#01000000" Spacing="5" PointerPressed="TitleMove">
-					<Image Margin="5" VerticalAlignment="Center" Source="/Assets/blueway-logo.png" PointerPressed="TitleMove" />
-					<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" FontWeight="UltraBlack" Text="{Binding AppName}" PointerPressed="TitleMove" />
-					<TextBlock Margin="5" Text="{Binding AppVersion}" PointerPressed="TitleMove" />
-				</StackPanel>
-				<Panel Grid.Column="1" Background="#01000000" PointerPressed="TitleMove" />
-				<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
-					<Button Click="G_Clicked">
-						<Panel>
-							<Image Source="/Assets/settings-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
-							<Image Source="/Assets/settings-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
-						</Panel>
-					</Button>
-					<Button Click="U_Clicked">
-						<Panel>
-							<Image Source="/Assets/minimize-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
-							<Image Source="/Assets/minimize-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
-						</Panel>
-					</Button>
-					<Button Click="S_Clicked">
-						<Panel>
-							<Image Source="/Assets/maximize-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
-							<Image Source="/Assets/maximize-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
-						</Panel>
-					</Button>
-					<Button Click="X_Clicked">
-						<Panel>
-							<Image Source="/Assets/close-w.png" Width="16" Height="16" IsVisible="{Binding IsDark}" />
-							<Image Source="/Assets/close-b.png" Width="16" Height="16" IsVisible="{Binding !IsDark}" />
-						</Panel>
-					</Button>
-				</StackPanel>
-			</Grid>
-			<Carousel Grid.Row="1" Name="ContentCarousel">
-				<Carousel.PageTransition>
-					<CompositePageTransition>
-						<CrossFade Duration="0:00:00.200" />
-					</CompositePageTransition>
-				</Carousel.PageTransition>
-				<Carousel.Styles>
-					<Style Selector="Button">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
-					</Style>
-					<Style Selector="Button:pointerover /template/ ContentPresenter">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
-					</Style>
-				</Carousel.Styles>
-			</Carousel>
-			<StackPanel Name="Navigation" Margin="5" Grid.Row="2" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
-				<StackPanel.Styles>
-					<Style Selector="Button">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
-					</Style>
-					<Style Selector="Button:pointerover /template/ ContentPresenter">
-						<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
-					</Style>
-				</StackPanel.Styles>
-				<Button Content="{Binding Back}" Name="Back" Click="BackPressed" />
-				<Button Content="{Binding Forward}" Name="Forward" Click="ForwardPressed" />
-				<Button Content="{Binding Cancel}" Name="Cancel" Click="CancelPressed" />
-				<Button Content="{Binding OK}" Name="OK" Click="OKPressed" />
+	<Grid Name="ContentGrid" RowDefinitions="40,*,Auto">
+		<Grid Name="TitleBar" Grid.Row="0" ColumnDefinitions="*,*,Auto">
+			<Grid.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</Grid.Styles>
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Background="#01000000" Spacing="5">
+				<Image Margin="5" VerticalAlignment="Center" Source="/Assets/blueway-logo.png" />
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" FontWeight="UltraBlack" Text="{Binding AppName}" />
+				<TextBlock Margin="5" Text="{Binding AppVersion}" />
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="10" Text=">" />
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" Name="PageTitle" />
 			</StackPanel>
 		</Grid>
-	</DockPanel>
+		<Carousel Grid.Row="1" Name="ContentCarousel">
+			<Carousel.PageTransition>
+				<CompositePageTransition>
+					<CrossFade Duration="0:00:00.200" />
+				</CompositePageTransition>
+			</Carousel.PageTransition>
+			<Carousel.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</Carousel.Styles>
+		</Carousel>
+		<StackPanel Name="Navigation" Margin="5" Grid.Row="2" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
+			<StackPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</StackPanel.Styles>
+			<Button Content="{Binding Back}" Name="Back" Click="BackPressed" />
+			<Button Content="{Binding Forward}" Name="Forward" Click="ForwardPressed" />
+			<Button Content="{Binding Cancel}" Name="Cancel" Click="CancelPressed" />
+			<Button Content="{Binding OK}" Name="OK" Click="OKPressed" />
+		</StackPanel>
+	</Grid>
 </Window>

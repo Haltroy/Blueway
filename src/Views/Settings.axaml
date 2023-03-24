@@ -2,7 +2,156 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:Blueway.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="550"
              x:Class="Blueway.Views.Settings">
-  Welcome to Avalonia!
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+
+	<Panel>
+		<TabControl TabStripPlacement="Left">
+			<TabItem Header="General">
+				<StackPanel Orientation="Vertical" Spacing="5">
+					<TextBlock FontSize="25" Text="General" />
+					<Separator />
+					<ScrollViewer>
+						<StackPanel Orientation="Vertical" Spacing="5">
+							<ToggleSwitch Name="CheckInternet" OnContent="Check Internet connection" OffContent="{Binding $self.OnContent}" />
+							<ToggleSwitch Name="NotifyOnAutoBackup" OnContent="Show notification on auto-backups" OffContent="{Binding $self.OnContent}" />
+							<ToggleSwitch Name="CopySettings" OnContent="Copy settings to backup folder" OffContent="{Binding $self.OnContent}" />
+							<TextBox IsReadOnly="True" Text="Copies the settings to the backup folder alongside with Blueway. The schema should enable &quot;put Blueway to backup folder&quot; option enabled. Works on all systems." TextWrapping="Wrap" />
+							<ToggleSwitch Name="NotifyOnUpdate" OnContent="Show notification on updates" OffContent="{Binding $self.OnContent}" />
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<Panel Width="25" />
+								<ToggleSwitch Name="AutoUpdate" OnContent="Auto-update Blueway" OffContent="{Binding $self.OnContent}" />
+							</StackPanel>
+							<ToggleSwitch Name="StartWithOS" OnContent="Start Blueway on OS start" OffContent="{Binding $self.OnContent}" />
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<Panel Width="25" />
+								<ToggleSwitch Name="StartInTray" OnContent="Start Blueway minimized or in tray if possible" OffContent="{Binding $self.OnContent}" />
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<TextBlock VerticalAlignment="Center" Text="Thread Count:" />
+								<NumericUpDown Value="2" Minimum="1" Maximum="10" />
+							</StackPanel>
+							<TextBox IsReadOnly="True" Text="Determines how many jobs should be executed at that time. Might speed up backups but might use a lot of resources." TextWrapping="Wrap" />
+							<Panel Height="10" />
+						</StackPanel>
+					</ScrollViewer>
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="Sources">
+				<StackPanel Orientation="Vertical" Spacing="5">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock FontSize="25" Text="Sources" />
+						<Button Content="Add new..." />
+					</StackPanel>
+					<Separator />
+					<!-- EXAMPLE SOURCE -->
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Button Content="D" />
+						<StackPanel Orientation="Vertical">
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<TextBlock Text="Blueway Official repository" FontSize="20" />
+								<Image Source="/Assets/avalonia-logo.ico" Width="16" Height="16" />
+							</StackPanel>
+							<TextBlock Text="The official repository of Blueway." />
+						</StackPanel>
+					</StackPanel>
+					<!-- EXAMPLE SOURCE -->
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="Customization">
+				<StackPanel Orientation="Vertical" Spacing="5">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock FontSize="25" Text="Customization" />
+						<Button Content="Install new..." />
+					</StackPanel>
+					<Separator />
+					<Grid ColumnDefinitions="20,*,20">
+						<Image Grid.Column="1" Source="/Assets/avalonia-logo.ico" Height="150" />
+					</Grid>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock VerticalAlignment="Center" Text="Theme:" />
+						<ComboBox SelectedIndex="0">
+							<ComboBoxItem Content="Breath" />
+							<ComboBoxItem Content="Breath Dark" />
+							<ComboBoxItem Content="Dark" />
+							<ComboBoxItem Content="Light" />
+						</ComboBox>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock VerticalAlignment="Center" Text="Background:" />
+						<Panel Background="Red" Width="25" Height="15" />
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock VerticalAlignment="Center" Text="Foreground:" />
+						<Panel Background="Blue" Width="25" Height="15" />
+						<ToggleSwitch Name="AutoForeColor" OnContent="Automatic" OffContent="{Binding $self.OnContent}" />
+					</StackPanel>
+					<ToggleSwitch Name="UseBlur" OnContent="Blur background" OffContent="{Binding $self.OnContent}" />
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="About">
+				<ScrollViewer>
+					<StackPanel Orientation="Vertical" Spacing="5">
+						<TextBlock FontSize="25" Text="About" />
+						<Separator />
+						<Panel Height="10" DockPanel.Dock="Bottom" />
+						<StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10">
+							<Panel Height="10" />
+							<Image Width="64" Height="64" Source="/Assets/blueway-logo.png" />
+							<StackPanel Spacing="5" HorizontalAlignment="Center" Orientation="Horizontal">
+								<TextBlock FontSize="20" FontWeight="DemiBold"  Text="{Binding AppName}" />
+								<TextBlock Text="{Binding AppVersion}" />
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<TextBlock FontSize="15" TextAlignment="Center" Text="by " />
+								<Image VerticalAlignment="Center" Width="23" Height="23" Source="/Assets/haltroy-logo.png" />
+								<TextBlock FontSize="15" TextAlignment="Center" Text="haltroy" />
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
+								<Button Click="Navigate" Content="Website" Tag="https://haltroy.com" />
+								<Button Click="Navigate" Content="Twitter" Tag="https://twitter.com/haltroy" />
+								<Button Click="Navigate" Content="GitHub" Tag="https://github.com/haltroy" />
+								<Button Click="Navigate" Content="Mastodon" Tag="https://mastodon.online/@haltroy" />
+								<Button Click="Navigate" Content="Reddit" Tag="https://reddit.com/r/haltroy" />
+							</StackPanel>
+						</StackPanel>
+						<Panel Height="10" />
+						<StackPanel Orientation="Vertical" Spacing="5">
+							<TextBlock Text="Technologies used:" />
+							<Separator />
+							<StackPanel Orientation="Vertical" Spacing="10">
+								<StackPanel Orientation="Horizontal" Spacing="5">
+									<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+									<Image Source="/Assets/fostrian-logo.png" Width="16" Height="16" />
+									<TextBlock Text="Fostrian" VerticalAlignment="Center" FontSize="15" />
+									<Button Content="Visit" Click="Navigate" Tag="https://github.com/haltroy/Fostrian" />
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Spacing="5">
+									<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+									<Image Source="/Assets/avalonia-logo.ico" Width="16" Height="16" />
+									<TextBlock Text="Avalonia UI" VerticalAlignment="Center" FontSize="15" />
+									<Button Content="Visit" Click="Navigate" Tag="https://avaloniaui.net/" />
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Spacing="5">
+									<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+									<Image Source="/Assets/dotnet-logo.png" Width="16" Height="16" />
+									<TextBlock Text=".NET" VerticalAlignment="Center" FontSize="15" />
+									<Button Content="Visit" Click="Navigate" Tag="https://dotnet.microsoft.com/en-us/" />
+								</StackPanel>
+							</StackPanel>
+							<TextBlock Text="License:" />
+							<Separator />
+							<TextBox TextWrapping="Wrap" IsReadOnly="True" Name="License" />
+							<Panel Height="20" />
+						</StackPanel>
+					</StackPanel>
+				</ScrollViewer>
+			</TabItem>
+		</TabControl>
+	</Panel>
 </UserControl>

@@ -24,12 +24,17 @@ public class MainWindowViewModel : ViewModelBase
         );
 
     public IBrush BackColor { get; set; } =
-        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#400384fc"));
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#80ffffff"));
+
     public IBrush ForeColor { get; set; } =
         new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#000000"));
+
     public IBrush ForeColor2 { get; set; } =
         new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#202020"));
-    public bool IsDark => false; public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel { get; set; } =
+
+    public bool IsDark { get; set; } = true;
+
+    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel { get; set; } =
     Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur;
 
     public string OK => "OK";

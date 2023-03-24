@@ -4,41 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
              x:Class="Blueway.Views.Home">
+
 	<Grid ColumnDefinitions="*,*" RowDefinitions="25,*,25">
 
 		<StackPanel Grid.Row="1" Spacing="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="25 0 10 0" Orientation="Vertical" Grid.Column="0">
 			<TextBlock FontSize="25" FontWeight="Black" Text="Welcome!" />
 			<Button Click="NewBackup">
-				<StackPanel Orientation="Horizontal">
-					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Panel>
+						<Image Source="/Assets/new-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/new-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
+					</Panel>
 					<TextBlock Text="New backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
 			<Button Click="CustomBackup">
-				<StackPanel Orientation="Horizontal">
-					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Panel>
+						<Image Source="/Assets/customnew-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/customnew-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
+					</Panel>
 					<TextBlock Text="Custom backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
 
 			<Button Click="ApplyBackup">
-				<StackPanel Orientation="Horizontal">
-					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Panel>
+						<Image Source="/Assets/apply-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/apply-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
+					</Panel>
 					<TextBlock Text="Apply backup" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
 
-			<Button Click="InstallApp">
-				<StackPanel Orientation="Horizontal">
-					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
-					<TextBlock Text="Install something" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+			<Button Click="AutoBackups">
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Panel>
+						<Image Source="/Assets/schedule-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/schedule-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
+					</Panel>
+					<TextBlock Text="Automatic backups" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
 
-			<Button Click="AutoBackups">
-				<StackPanel Orientation="Horizontal">
-					<Image Grid.Column="0" Source="/Assets/avalonia-logo.ico" Width="32" Height="32" />
-					<TextBlock Text="Automatic backups" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+			<Button Click="OpenSettings">
+				<StackPanel Orientation="Horizontal" Spacing="5">
+					<Panel>
+						<Image Source="/Assets/settings-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
+						<Image Source="/Assets/settings-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
+					</Panel>
+					<TextBlock Text="Settings" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
 		</StackPanel>

@@ -75,7 +75,7 @@ public partial class MainWindow : Window
 
     public void SwitchTo(AUC uc, Buttons buttons = Buttons.None, bool clear = false)
     {
-        if (ContentCarousel.Items is AvaloniaList<object> list)
+        if (ContentCarousel.Items is Avalonia.Controls.ItemCollection list)
         {
             if (clear)
             {
@@ -89,7 +89,10 @@ public partial class MainWindow : Window
                 }
                 list.Clear();
             }
+            // TODO: Get page titles from languages
+            PageTitle.Text = uc.Title;
             uc.MainWindow = this;
+            uc.DataContext = DataContext;
             list.Add(uc);
             ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
             BackAvailable.OnNext(buttons == Buttons.Back);
@@ -97,49 +100,6 @@ public partial class MainWindow : Window
             OKAvailable.OnNext(buttons == Buttons.OK);
             CancelAvailable.OnNext(buttons == Buttons.Cancel);
         }
-    }
-    private void NorthDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.North, e); // TopMiddle
-
-    private void NorthWestDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.NorthWest, e); // TopLeft
-
-    private void NorthEastDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.NorthEast, e); // TopRight
-
-    private void SouthDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.South, e); // BottomMiddle
-
-    private void SouthWestDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.SouthWest, e); // BottomLeft
-
-    private void SouthEastDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.SouthEast, e); // BottomRight
-
-    private void WestDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.West, e); // LeftMiddle
-
-    private void EastDrag(object? s, Avalonia.Input.PointerPressedEventArgs e) =>
-        this.BeginResizeDrag(WindowEdge.East, e); // RightMiddle
-
-    private void TitleMove(object? s, Avalonia.Input.PointerPressedEventArgs e) => BeginMoveDrag(e);
-
-    private void X_Clicked(object? s, Avalonia.Interactivity.RoutedEventArgs e) => Close();
-
-    private void S_Clicked(object? s, Avalonia.Interactivity.RoutedEventArgs e) =>
-        WindowState =
-            WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-
-    private void U_Clicked(object? s, Avalonia.Interactivity.RoutedEventArgs e) =>
-        WindowState = WindowState.Minimized;
-
-    private void G_Clicked(object? s, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        SwitchTo(new Settings(), Buttons.OK, true);
-        OnOKPressed += (s, e) =>
-        {
-            SwitchTo(new Home(), Buttons.None, true);
-        };
     }
 
     private void BackPressed(object? s, Avalonia.Interactivity.RoutedEventArgs e)
