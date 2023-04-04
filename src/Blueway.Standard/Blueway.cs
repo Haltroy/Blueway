@@ -40,6 +40,10 @@ namespace Blueway
         }
 
         public List<BackupAction> Actions { get; set; }
+
+        public void Run()
+        {
+        }
     }
 
     public enum BackupStatus
@@ -55,6 +59,8 @@ namespace Blueway
     /// </summary>
     public abstract class BackupAction
     {
+        private Progress progress = new Progress();
+
         /// <summary>
         /// Status of current action.
         /// </summary>
@@ -63,8 +69,7 @@ namespace Blueway
         /// <summary>
         /// Arguments of the action.
         /// </summary>
-        public object? Args { get; set; }
-
+        public object Args { get; set; }
 
         /// <summary>
         /// Runs the action from start.
@@ -91,7 +96,31 @@ namespace Blueway
         /// <summary>
         /// Progress of action.
         /// </summary>
-        public Progress Progress { get; set; } = new Progress();
+        public Progress Progress
+        { get => progress; set { OnProgressChange?.Invoke(this, value); progress = value; } }
+
+        /// <summary>
+        /// Delegate event for <see cref="OnProgressChange" />.
+        /// </summary>
+        /// <param name="action">Action that caused the change.</param>
+        /// <param name="progress">New value of progress.</param>
+        public delegate void OnProgressChangeDelegate(BackupAction action, Progress progress);
+
+        /// <summary>
+        /// Event raised on <see cref="Progress"/> changed .
+        /// </summary>
+        public event OnProgressChangeDelegate OnProgressChange;
+
+        /// <summary>
+        /// Delegate event for <see cref="OnDone" />.
+        /// </summary>
+        /// <param name="action">Action that is done.</param>
+        public delegate void OnDoneDelegate(BackupAction action);
+
+        /// <summary>
+        /// Event raised when this action has done. This event should be raised by the schema itself.
+        /// </summary>
+        public event OnDoneDelegate OnDone;
 
         /// <summary>
         /// Name of the action. Used for translation.
