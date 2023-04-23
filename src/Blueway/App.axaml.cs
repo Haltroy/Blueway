@@ -21,6 +21,7 @@ public partial class App : Application
             {
                 DataContext = new MainWindowViewModel(),
             };
+            desktop.Exit += (s, e) => { if (desktop.MainWindow is MainWindow mw && mw.DataContext is ViewModelBase vmb) { vmb.Settings.Save(); } };
         }
 
         base.OnFrameworkInitializationCompleted();

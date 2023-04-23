@@ -23,7 +23,21 @@ namespace Blueway
         /// Creates a new <see cref="Color"/>.
         /// </summary>
         /// <param name="n">Decimal value of the hexadecimal color (#FE0254 -> 16646740)</param>
-        public Color(uint n) : this(n.ToString("X")) { }
+        public Color(uint n) : this(ConvertUIntToHex(n)) { }
+
+        private static string ConvertUIntToHex(uint n)
+        {
+            string hex = n.ToString("X");
+            if (hex.Length > 6 && hex.Length < 8) { hex = "0" + hex; }
+            if (hex.Length < 6)
+            {
+                for (int i = hex.Length; i < 6; i++)
+                {
+                    hex = "0" + hex;
+                }
+            }
+            return hex;
+        }
 
         /// <summary>
         /// Creates a new <see cref="Color"/>.

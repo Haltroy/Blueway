@@ -16,22 +16,22 @@ namespace Blueway
 
         #region Paths
 
-        private string UserSettingsFile => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".blueway", "settings.fff");
-
+        private string UserFiles => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".blueway");
+        private string UserSettingsFile => Path.Combine(UserFiles, "settings.fff");
         private string AppSettingsFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.fff");
-        private string UserThemes => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".blueway", "themes");
-
+        private string UserHistoryFile => Path.Combine(UserFiles, "history.fff");
+        private string AppHistoryFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "history.fff");
+        private string UserThemes => Path.Combine(UserFiles, "themes");
         private string AppThemes => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "themes");
-        private string UserSourcesFolder => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".blueway", "sources");
-
+        private string UserSourcesFolder => Path.Combine(UserFiles, "sources");
         private string AppSourcesFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sources");
-        private string UserExts => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".blueway", "ext");
-
+        private string UserExts => Path.Combine(UserFiles, "ext");
         private string AppExts => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ext");
 
         #endregion Paths
 
         #region Settings
+
         public bool EnableExtensions { get; set; } = true;
         public bool CheckInternetConnection { get; set; } = true;
         public bool AutoBackupShowNotifications { get; set; } = true;
@@ -44,11 +44,32 @@ namespace Blueway
         public Theme CurrentTheme { get; set; } = DefaultThemes.Light;
         public BackupActionType[] BackupActionTypes { get; set; }
         public List<Theme> Themes { get; set; } = new List<Theme>() { DefaultThemes.Light, DefaultThemes.Dark, DefaultThemes.Breath, DefaultThemes.Breeze, DefaultThemes.Backupster };
+
+        public List<BackupHistoryItem> History { get; set; } = new List<BackupHistoryItem>();
+
+        public BackupHistoryItem GetLatestOrEmptyBackup()
+        {
+            if (History.Count > 0)
+            {
+                History = History.OrderBy(it => it.Date).ToList();
+                return History.Last();
+            }
+            else
+            {
+                return new BackupHistoryItem("New Backup" /* TODO: Add translation here */, new BackupSchema(new List<BackupAction>()), DateTime.Now, BackupStatus.Planned, DateTime.Now, new TimeSpan(0), Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            }
+
+        }
+
         #endregion Settings
 
         public Settings()
         {
-            BackupActionTypes = new BackupActionType[] { }; // TODO: add defaults
+            if (!Directory.Exists(UserFiles))
+            {
+                Directory.CreateDirectory(UserFiles);
+            }
+            BackupActionTypes = new BackupActionType[] { new BackupActions.BackupDirectoryActionType() }; // TODO: add defaults
         }
 
         public Settings AutoLoadConfig()
@@ -65,9 +86,12 @@ namespace Blueway
             return this;
         }
 
-        public Settings Save()
+        public Settings Save(string saveTo = null)
         {
-            var root = Fostrian.GenerateRootNode();
+            var root = Fostrian.GenerateRootNode(false);
+            root.Encoding = System.Text.Encoding.Unicode;
+            root.StartByte = 0x02;
+            root.EndByte = 0x03;
             root.Add(new Fostrian.FostrianNode(EnableExtensions, "enable-extensions"));
             root.Add(new Fostrian.FostrianNode(EnableExtensions, "enable-extensions"));
             root.Add(new Fostrian.FostrianNode(CheckInternetConnection, "check-internet"));
@@ -79,13 +103,13 @@ namespace Blueway
             root.Add(new Fostrian.FostrianNode(StartMinimized, "start-minimized"));
             root.Add(new Fostrian.FostrianNode(ThreadCount, "threads"));
             root.Add(new Fostrian.FostrianNode(CurrentTheme.Name, "theme"));
+            Fostrian.Recreate(root, saveTo ?? UserSettingsFile);
             return this;
         }
 
         private void ParseConfig(string configFile)
         {
             // TODO: Load App Sources here
-
 
             // Load Themes
             List<string> themes = new List<string>();
@@ -127,30 +151,39 @@ namespace Blueway
                         case "enable-extensions":
                             EnableExtensions = node.DataAsBoolean;
                             break;
+
                         case "check-internet":
                             CheckInternetConnection = node.DataAsBoolean;
                             break;
+
                         case "auto-backup-notif":
                             AutoBackupShowNotifications = node.DataAsBoolean;
                             break;
+
                         case "copy-settings":
                             CopySettingsToBackup = node.DataAsBoolean;
                             break;
+
                         case "update-notif":
                             ShowNotificationOnUpdate = node.DataAsBoolean;
                             break;
+
                         case "update-auto":
                             AutoUpdate = node.DataAsBoolean;
                             break;
+
                         case "os-start":
                             StartOnOS = node.DataAsBoolean;
                             break;
+
                         case "start-minimized":
                             StartMinimized = node.DataAsBoolean;
                             break;
+
                         case "threads":
                             ThreadCount = node.DataAsInt32;
                             break;
+
                         case "theme":
                             CurrentTheme = Themes.FindAll(it => string.Equals(it.Name, node.DataAsString)) is List<Theme> list && list.Count > 0 ? list[0] : DefaultThemes.Light;
                             break;

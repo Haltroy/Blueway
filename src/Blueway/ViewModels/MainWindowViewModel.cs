@@ -23,19 +23,22 @@ public class MainWindowViewModel : ViewModelBase
                 : "?"
         );
 
-    public IBrush BackColor { get; set; } =
-        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#80ffffff"));
+    public IBrush BackColor =>
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Background.ToHex(false)));
 
-    public IBrush ForeColor { get; set; } =
-        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#000000"));
+    public IBrush OverlayColor =>
+    new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Accent.ToHex(false)));
 
-    public IBrush ForeColor2 { get; set; } =
-        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#202020"));
+    public IBrush ForeColor =>
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Foreground.ToHex(false)));
 
-    public bool IsDark { get; set; } = true;
+    public IBrush ForeColor2 =>
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Foreground.ShiftBrightness(20).ToHex(false)));
 
-    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel { get; set; } =
-    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur;
+    public bool IsDark => !Settings.CurrentTheme.Background.IsBright;
+
+    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel => Settings.CurrentTheme.UseAcrylic ?
+    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur : Avalonia.Controls.WindowTransparencyLevel.None;
 
     public string OK => "OK";
     public string Cancel => "Cancel";

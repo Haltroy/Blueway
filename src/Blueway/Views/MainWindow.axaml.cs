@@ -49,6 +49,18 @@ public partial class MainWindow : Window
         }
     }
 
+    internal void RefreshTheme(Theme? theme = null)
+    {
+        if (DataContext is ViewModels.ViewModelBase vmb)
+        {
+            if (theme is null) { theme = vmb.Settings.CurrentTheme; }
+            vmb.Settings.CurrentTheme = theme;
+            DataContext = null;
+            DataContext = vmb;
+            InvalidateVisual();
+        }
+    }
+
     public MainWindow()
     {
         InitializeComponent();

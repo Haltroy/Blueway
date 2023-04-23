@@ -53,5 +53,6 @@ namespace Blueway
         Options,
         File,
         Folder,
+        Enumerator,
     }
 }

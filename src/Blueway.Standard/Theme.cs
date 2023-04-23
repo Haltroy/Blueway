@@ -5,19 +5,22 @@ namespace Blueway
 {
     public class Theme
     {
-        public Theme(Color background, Color foreground, bool useAcrylic, string name, string path)
+        public Theme(Color background, Color foreground, Color accent, bool useAcrylic, string name, string path)
         {
             Background = background;
             Foreground = foreground;
             UseAcrylic = useAcrylic;
+            Accent = accent;
             Name = name;
             Path = path;
         }
-        public Theme(Color background, Color foreground, bool useAcrylic, string name)
+
+        public Theme(Color background, Color foreground, Color accent, bool useAcrylic, string name)
         {
             Background = background;
             Foreground = foreground;
             UseAcrylic = useAcrylic;
+            Accent = accent;
             Name = name;
         }
 
@@ -51,6 +54,11 @@ namespace Blueway
                         Foreground = new Color(node.DataAsUInt32);
                         break;
 
+                    case "overlay":
+                    case "accent":
+                        Accent = new Color(node.DataAsUInt32);
+                        break;
+
                     case "useacrylic":
                         UseAcrylic = node.DataAsBoolean;
                         break;
@@ -69,6 +77,7 @@ namespace Blueway
         public Color Background { get; set; }
 
         public Color Foreground { get; set; }
+        public Color Accent { get; set; }
         public bool UseAcrylic { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
