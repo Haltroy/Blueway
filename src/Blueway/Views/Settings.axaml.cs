@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 
 namespace Blueway.Views
 {
@@ -23,6 +24,7 @@ namespace Blueway.Views
                 AutoUpdate.IsChecked = settings.AutoUpdate;
                 StartWithOS.IsChecked = settings.StartOnOS;
                 StartInTray.IsChecked = settings.StartMinimized;
+                ThreadCountText.Text = "" + settings.ThreadCount;
                 ThreadCount.Value = settings.ThreadCount;
 
                 // General - Events
@@ -33,7 +35,14 @@ namespace Blueway.Views
                 AutoUpdate.IsCheckedChanged += (s, e) => settings.AutoUpdate = AutoUpdate.IsChecked ?? true;
                 StartWithOS.IsCheckedChanged += (s, e) => settings.StartOnOS = StartWithOS.IsChecked ?? true;
                 StartInTray.IsCheckedChanged += (s, e) => settings.StartMinimized = StartInTray.IsChecked ?? true;
-                ThreadCount.ValueChanged += (s, e) => settings.ThreadCount = (int)(ThreadCount.Value ?? 1);
+                ThreadCount.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == Slider.ValueProperty)
+                    {
+                        settings.ThreadCount = (int)ThreadCount.Value;
+                        ThreadCountText.Text = "" + settings.ThreadCount;
+                    }
+                };
 
                 // TODO: Sources here
 

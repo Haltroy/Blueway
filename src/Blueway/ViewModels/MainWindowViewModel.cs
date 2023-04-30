@@ -26,14 +26,26 @@ public class MainWindowViewModel : ViewModelBase
     public IBrush BackColor =>
         new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Background.ToHex(false)));
 
+    public IBrush BackColor2 =>
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Background.ShiftBrightness(20).ToHex(false)));
+
     public IBrush OverlayColor =>
     new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Accent.ToHex(false)));
+
+    public IBrush OverlayColor2 =>
+    new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Accent.ShiftBrightness(20).ToHex(false)));
+
+    public IBrush OverlayColor3 =>
+    new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Accent.ShiftBrightness(40).ToHex(false)));
 
     public IBrush ForeColor =>
         new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Foreground.ToHex(false)));
 
     public IBrush ForeColor2 =>
         new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Foreground.ShiftBrightness(20).ToHex(false)));
+
+    public IBrush ForeColor3 =>
+        new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(Settings.CurrentTheme.Foreground.ShiftBrightness(40).ToHex(false)));
 
     public bool IsDark => !Settings.CurrentTheme.Background.IsBright;
 

@@ -35,7 +35,8 @@
 							</StackPanel>
 							<StackPanel Orientation="Horizontal" Spacing="5">
 								<TextBlock VerticalAlignment="Center" Text="Thread Count:" />
-								<NumericUpDown Name="ThreadCount" Value="2" Minimum="1" Maximum="10" />
+								<Slider Name="ThreadCount" Width="100" LargeChange="1" SmallChange="1" Value="2" Minimum="1" Maximum="10" />
+								<TextBlock VerticalAlignment="Center" Name="ThreadCountText" Text="2" />
 							</StackPanel>
 							<TextBox IsReadOnly="True" Text="Determines how many jobs should be executed at that time. Might speed up backups but might use a lot of resources." TextWrapping="Wrap" />
 							<Panel Height="10" />
@@ -65,25 +66,24 @@
 						<!-- TOOD: Replace this background image with some real placeholder test background or user's background-->
 						<!-- If we plan to use the user's background here then put a disclaimer that we don't receive the data-->
 						<Image Grid.Row="1" Grid.Column="1" ZIndex="0" Height="250" Source="/Assets/blueway-logo.png" Name="ThemePreviewBack" />
-						<!-- TODO: Replace bindings with styling in main window -->
-						<Border  Grid.Column="1" Grid.Row="1" BorderThickness="10" ZIndex="1" BorderBrush="{Binding BackColor}" Width="{Binding #ThemePreviewBack.Bounds.Width}" Height="{Binding #ThemePreviewBack.Bounds.Height}" CornerRadius="10">
-							<DockPanel LastChildFill="True" Background="{Binding BackColor}">
+						<Border  Grid.Column="1" Grid.Row="1" BorderThickness="10" ZIndex="1" Width="{Binding #ThemePreviewBack.Bounds.Width}" Height="{Binding #ThemePreviewBack.Bounds.Height}" CornerRadius="10">
+							<DockPanel LastChildFill="True">
 								<StackPanel Margin="5 5 0 0" DockPanel.Dock="Top" Spacing="10" Orientation="Horizontal">
 									<Image Width="28" Height="28" Source="/Assets/blueway-logo.png" />
-									<Line VerticalAlignment="Center" Stroke="{Binding ForeColor}" StartPoint="0 0" EndPoint="50 0" StrokeThickness="20" StrokeLineCap="Round" />
+									<Line VerticalAlignment="Center" StartPoint="0 0" EndPoint="50 0" StrokeThickness="20" StrokeLineCap="Round" />
 								</StackPanel>
 								<StackPanel Margin="20 50 0 0" Orientation="Vertical" Spacing="10">
-									<Line VerticalAlignment="Center" Stroke="{Binding ForeColor}" StartPoint="0 0" EndPoint="75 0" StrokeThickness="10" StrokeLineCap="Round" />
+									<Line VerticalAlignment="Center" StartPoint="0 0" EndPoint="75 0" StrokeThickness="10" StrokeLineCap="Round" />
 									<StackPanel Margin="0 10 0 0" Orientation="Horizontal" Spacing="15">
 										<Panel>
 											<Image Width="28" Height="28" Source="/Assets/logo-b.png" IsVisible="{Binding !IsDark}" />
 											<Image Width="28" Height="28" Source="/Assets/logo-w.png" IsVisible="{Binding IsDark}" />
 										</Panel>
-										<Line VerticalAlignment="Center"  Stroke="{Binding ForeColor}" StartPoint="0 0" EndPoint="100 0" StrokeThickness="10" StrokeLineCap="Round" />
+										<Line VerticalAlignment="Center" StartPoint="0 0" EndPoint="100 0" StrokeThickness="10" StrokeLineCap="Round" />
 									</StackPanel>
 									<StackPanel Margin="0 10 0 0" Orientation="Horizontal" Spacing="20">
-										<Rectangle Stroke="{Binding	OverlayColor}" Width="20" Height="20" StrokeThickness="3" StrokeLineCap="Round" RadiusX="5" RadiusY="5" />
-										<Line VerticalAlignment="Center"  Stroke="{Binding ForeColor}" StartPoint="0 0" EndPoint="100 0" StrokeThickness="10" StrokeLineCap="Round" />
+										<Rectangle Width="20" Height="20" StrokeThickness="3" StrokeLineCap="Round" RadiusX="5" RadiusY="5" />
+										<Line VerticalAlignment="Center" StartPoint="0 0" EndPoint="100 0" StrokeThickness="10" StrokeLineCap="Round" />
 									</StackPanel>
 								</StackPanel>
 							</DockPanel>
