@@ -9,6 +9,14 @@ using LibFoster;
 
 namespace Blueway
 {
+    public static class Main
+    {
+        public static Settings Settings =>
+            new Settings()
+            .AutoLoadConfig()
+            .AutoLoadExtensions();
+    }
+
     public class Settings
     {
         public static bool GlobalEnableExtensions => true;
@@ -43,6 +51,7 @@ namespace Blueway
         public int ThreadCount { get; set; } = 2;
         public Theme CurrentTheme { get; set; } = DefaultThemes.Light;
         public BackupActionType[] BackupActionTypes { get; set; }
+
         public List<Theme> Themes { get; set; } = new List<Theme>() { DefaultThemes.Light, DefaultThemes.Dark, DefaultThemes.Breath, DefaultThemes.Breeze, DefaultThemes.Backupster };
 
         public List<BackupHistoryItem> History { get; set; } = new List<BackupHistoryItem>();
@@ -58,7 +67,6 @@ namespace Blueway
             {
                 return new BackupHistoryItem("New Backup" /* TODO: Add translation here */, new BackupSchema(new List<BackupAction>()), DateTime.Now, BackupStatus.Planned, DateTime.Now, new TimeSpan(0), Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
             }
-
         }
 
         #endregion Settings
@@ -111,28 +119,7 @@ namespace Blueway
         {
             // TODO: Load App Sources here
 
-            // Load Themes
-            List<string> themes = new List<string>();
-
-            if (Directory.Exists(UserThemes))
-            {
-                themes.AddRange(Directory.GetFiles(UserThemes, "*.fff", SearchOption.AllDirectories));
-            }
-
-            if (Directory.Exists(AppThemes))
-            {
-                themes.AddRange(Directory.GetFiles(AppThemes, "*.fff", SearchOption.AllDirectories));
-            }
-
-            for (int i = 0; i < themes.Count; i++)
-            {
-                try
-                {
-                    Themes.Add(new Theme(themes[i]));
-                }
-                catch (Exception) { continue; }
-            }
-            themes = null;
+            LoadThemes();
 
             // Load Settings
             if (new FileInfo(configFile).Length <= 0)
@@ -194,6 +181,32 @@ namespace Blueway
                     continue;
                 }
             }
+        }
+
+        private Settings LoadThemes()
+        {
+            List<string> themes = new List<string>();
+
+            if (Directory.Exists(UserThemes))
+            {
+                themes.AddRange(Directory.GetFiles(UserThemes, "*.fff", SearchOption.AllDirectories));
+            }
+
+            if (Directory.Exists(AppThemes))
+            {
+                themes.AddRange(Directory.GetFiles(AppThemes, "*.fff", SearchOption.AllDirectories));
+            }
+
+            for (int i = 0; i < themes.Count; i++)
+            {
+                try
+                {
+                    Themes.Add(new Theme(themes[i]));
+                }
+                catch (Exception) { continue; }
+            }
+            themes = null;
+            return this;
         }
 
         public Settings AutoLoadExtensions()

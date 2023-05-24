@@ -8,25 +8,38 @@ mc:Ignorable="d" Width="700" Height="600" d:DesignWidth="{Binding Width}" d:Desi
 x:Class="Blueway.Views.MainWindow"
 Icon="/Assets/blueway-logo.ico"
 Title="{Binding AppName}"
-TransparencyLevelHint="{Binding TransparencyLevel}"
-	Background="{Binding BackColor}"
-	Foreground="{Binding ForeColor}">
+Background="{Binding BackColor}"
+Foreground="{Binding ForeColor}"
+TransparencyLevelHint="{Binding TransparencyLevel}">
 
 	<Design.DataContext>
 		<vm:MainWindowViewModel />
 	</Design.DataContext>
 
 	<Grid Name="ContentGrid" RowDefinitions="40,*,Auto">
+
 		<Grid Name="TitleBar" Grid.Row="0" ColumnDefinitions="*,*,Auto">
-			<Grid.Styles>
-				<Style Selector="Button">
-					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
-				</Style>
-				<Style Selector="Button:pointerover /template/ ContentPresenter">
-					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
-				</Style>
-			</Grid.Styles>
-			<StackPanel Grid.Column="0" Orientation="Horizontal" Background="#01000000" Spacing="5">
+			<StackPanel Spacing="5" Margin="0 5 5 0" Orientation="Horizontal" Grid.Column="2">
+				<Button Click="OpenSettings">
+					<Panel>
+						<Image Source="/Assets/settings-b.png" IsVisible="{Binding !IsDark}" Width="16" Height="{Binding Width}" />
+						<Image Source="/Assets/settings-w.png" IsVisible="{Binding IsDark}" Width="16" Height="{Binding Width}" />
+					</Panel>
+				</Button>
+				<Button Click="OpenAbout">
+					<Panel>
+						<Image Source="/Assets/settings-b.png" IsVisible="{Binding !IsDark}" Width="16" Height="{Binding Width}" />
+						<Image Source="/Assets/settings-w.png" IsVisible="{Binding IsDark}" Width="16" Height="{Binding Width}" />
+					</Panel>
+				</Button>
+				<Button Click="OpenSources">
+					<Panel>
+						<Image Source="/Assets/settings-b.png" IsVisible="{Binding !IsDark}" Width="16" Height="{Binding Width}" />
+						<Image Source="/Assets/settings-w.png" IsVisible="{Binding IsDark}" Width="16" Height="{Binding Width}" />
+					</Panel>
+				</Button>
+			</StackPanel>
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5 5 0 0" Background="#01000000" Spacing="5">
 				<Image Margin="5" VerticalAlignment="Center" Source="/Assets/blueway-logo.png" />
 				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" FontWeight="UltraBlack" Text="{Binding AppName}" />
 				<TextBlock Margin="5" Text="{Binding AppVersion}" />
@@ -37,41 +50,16 @@ TransparencyLevelHint="{Binding TransparencyLevel}"
 		<Carousel Grid.Row="1" Name="ContentCarousel">
 			<Carousel.Styles>
 				<Style Selector="Button">
-					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
-				</Style>
-				<Style Selector="Button:pointerover /template/ ContentPresenter">
-					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
-				</Style>
-				<Style Selector="#ThemePreview Line">
-					<Setter Property="Stroke" Value="{Binding ForeColor}" />
-				</Style>
-				<Style Selector="#ThemePreview Rectangle">
-					<Setter Property="Stroke" Value="{Binding OverlayColor}" />
-				</Style>
-				<Style Selector="#ThemePreview DockPanel">
-					<Setter Property="Background" Value="{Binding BackColor}" />
-				</Style>
-				<Style Selector="#ThemePreview Border">
-					<Setter Property="BorderBrush" Value="{Binding BackColor}" />
-				</Style>
-				<Style Selector="TabItem">
-					<Setter Property="Foreground" Value="{Binding ForeColor3}" />
-				</Style>
-				<Style Selector="TabItem:pointerover > TextBlock:pointerover">
-					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
-				</Style>
-				<Style Selector="TabItem > TextBlock:pointerover">
-					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
-				</Style>
-				<Style Selector="TabItem:pointerover > TextBlock">
-					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
-				</Style>
-				<Style Selector="TabItem:selected">
 					<Setter Property="Foreground" Value="{Binding ForeColor}" />
-					<Setter Property="FontWeight" Value="Bold" />
 				</Style>
-				<Style Selector="TabItem Border#PART_SelectedPipe">
-					<Setter Property="Background" Value="{Binding OverlayColor}" />
+				<Style Selector="Button:pointerover ContentPresenter">
+					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+				<Style Selector="AccessText">
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover AccessText">
+					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
 				</Style>
 				<Style Selector="ToggleSwitch">
 					<Setter Property="Foreground" Value="{Binding ForeColor}" />
@@ -98,10 +86,10 @@ TransparencyLevelHint="{Binding TransparencyLevel}"
 					<Setter Property="IsVisible" Value="False" />
 				</Style>
 				<Style Selector="ToggleSwitch:unchecked > Grid > Grid > Border#OuterBorder">
-					<Setter Property="BorderBrush" Value="{Binding OverlayColor}" />
+					<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
 				</Style>
 				<Style Selector="ToggleSwitch:unchecked > Grid > Grid > Canvas > Grid > Ellipse#SwitchKnobOff">
-					<Setter Property="Fill" Value="{Binding OverlayColor}" />
+					<Setter Property="Fill" Value="{Binding ForeColor}" />
 				</Style>
 				<Style Selector="ToggleSwitch:checked > Grid > Grid > Border#SwitchKnobBounds">
 					<Setter Property="BorderBrush" Value="{Binding OverlayColor}" />
@@ -113,6 +101,7 @@ TransparencyLevelHint="{Binding TransparencyLevel}"
 				<Style Selector="Separator">
 					<Setter Property="Background" Value="{Binding ForeColor}" />
 				</Style>
+				<!-- Slider /template/ Thumb /template/ Border -->
 				<Style Selector="Slider">
 					<Setter Property="TextElement.Foreground" Value="{Binding OverlayColor}" />
 					<Setter Property="Background" Value="{Binding ForeColor}" />
@@ -139,6 +128,12 @@ TransparencyLevelHint="{Binding TransparencyLevel}"
 					<Setter Property="Background" Value="{Binding OverlayColor}" />
 				</Style>
 			</Carousel.Styles>
+
+			<Carousel.PageTransition>
+				<CompositePageTransition>
+					<CrossFade Duration="0:00:00.500" />
+				</CompositePageTransition>
+			</Carousel.PageTransition>
 		</Carousel>
 		<StackPanel Name="Navigation" Margin="5" Grid.Row="2" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
 			<StackPanel.Styles>

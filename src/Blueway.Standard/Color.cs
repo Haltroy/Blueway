@@ -164,6 +164,8 @@ namespace Blueway
             return "#" + (!ignoreAlpha ? A.ToString("X2") : "") + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
         }
 
+        public string Hexadecimal => ToHex(false);
+
         /// <summary>
         /// Shifts brightness of color.
         /// </summary>

@@ -7,10 +7,36 @@
 	<StackPanel Orientation="Vertical" Spacing="5">
 		<TextBlock Text="Custom backup..." />
 		<Separator />
-		<TextBlock Text="Name:" />
-		<TextBlock Text="Backup to:" />
-		<TextBlock Text="Schedule:" />
-		<TextBlock Text="Reoccurance:" />
-		<TextBlock Text="Actions:" />
+		<StackPanel Orientation="Vertical" Spacing="5">
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock Text="Name:" VerticalAlignment="Center" />
+				<TextBox Name="SchemaName" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock Text="Backup to:" VerticalAlignment="Center" />
+				<TextBox Name="BackupTo" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock Text="Schedule:" VerticalAlignment="Center" />
+				<ToggleSwitch Name="Schedule" OnContent="" OffContent="" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock Text="Reoccurance: every" />
+				<NumericUpDown Name="ScheduleYears" />
+				<TextBlock Text="year" />
+				<NumericUpDown Name="ScheduleMonths" />
+				<TextBlock Text="month" />
+				<NumericUpDown Name="ScheduleDays" />
+				<TextBlock Text="day" />
+				<NumericUpDown Name="ScheduleHours" />
+				<TextBlock Text="hour" />
+				<NumericUpDown Name="ScheduleMinutes" />
+				<TextBlock Text="minute" />
+				<NumericUpDown Name="ScheduleSeconds" />
+				<TextBlock Text="second" />
+			</StackPanel>
+			
+		</StackPanel>
+		
 	</StackPanel>
 </UserControl>

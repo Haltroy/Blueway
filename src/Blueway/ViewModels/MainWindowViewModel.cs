@@ -1,6 +1,9 @@
 ﻿using Avalonia.Media;
 using System.Reflection;
 using Blueway;
+using Avalonia.Themes.Fluent;
+using Avalonia;
+using Avalonia.Platform;
 
 namespace Blueway.ViewModels;
 

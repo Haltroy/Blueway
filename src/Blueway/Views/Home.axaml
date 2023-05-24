@@ -47,16 +47,6 @@
 					<TextBlock Text="Automatic backups" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
 				</StackPanel>
 			</Button>
-
-			<Button Click="OpenSettings">
-				<StackPanel Orientation="Horizontal" Spacing="5">
-					<Panel>
-						<Image Source="/Assets/settings-w.png" Width="32" Height="32" IsVisible="{Binding IsDark}" />
-						<Image Source="/Assets/settings-b.png" Width="32" Height="32" IsVisible="{Binding !IsDark}" />
-					</Panel>
-					<TextBlock Text="Settings" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
-				</StackPanel>
-			</Button>
 		</StackPanel>
 		<Grid Grid.Row="1" Grid.Column="1" RowDefinitions="Auto,*" Margin="10 0 25 0">
 			<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">

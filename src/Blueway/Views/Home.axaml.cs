@@ -32,22 +32,7 @@ namespace Blueway.Views
             if (MainWindow != null)
             {
                 // TODO: Show a window to select which backup to load from or add backup source.
-                MainWindow.SwitchTo(new BackupDetails(), MainWindow.Buttons.Cancel, true);
-            }
-        }
-
-        private void OpenSettings(object? s, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            if (MainWindow != null)
-            {
-                MainWindow.OnOKPressed += (s, e) =>
-                {
-                    if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
-                    {
-                        mw.SwitchTo(this, MainWindow.Buttons.None, true);
-                    }
-                };
-                MainWindow.SwitchTo(new Settings(), MainWindow.Buttons.OK, true);
+                MainWindow.SwitchTo(new BackupProcess(), MainWindow.Buttons.Cancel, true);
             }
         }
 

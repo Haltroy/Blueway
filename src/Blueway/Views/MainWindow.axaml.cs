@@ -1,8 +1,11 @@
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Styling;
+using Avalonia.Themes.Fluent;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Subjects;
 
 namespace Blueway.Views;
@@ -53,11 +56,19 @@ public partial class MainWindow : Window
     {
         if (DataContext is ViewModels.ViewModelBase vmb)
         {
-            if (theme is null) { theme = vmb.Settings.CurrentTheme; }
-            vmb.Settings.CurrentTheme = theme;
+            if (theme is not null) { vmb.Settings.CurrentTheme = theme; }
             DataContext = null;
             DataContext = vmb;
             InvalidateVisual();
+            for (int i = 0; i < ContentCarousel.Items.Count; i++)
+            {
+                if (ContentCarousel.Items[i] is Control control)
+                {
+                    control.DataContext = null;
+                    control.DataContext = vmb;
+                    control.InvalidateVisual();
+                }
+            }
         }
     }
 
@@ -73,6 +84,7 @@ public partial class MainWindow : Window
         Cancel.Bind(IsVisibleProperty, CancelAvailable);
         Cancel.Bind(IsEnabledProperty, CancelAvailable);
         SwitchTo(new Home());
+        RefreshTheme();
     }
 
     [Flags]
@@ -85,32 +97,39 @@ public partial class MainWindow : Window
         Cancel
     }
 
-    public void SwitchTo(AUC uc, Buttons buttons = Buttons.None, bool clear = false)
+    public void SwitchTo(AUC? uc = null, Buttons buttons = Buttons.None, bool clear = false)
     {
         if (ContentCarousel.Items is Avalonia.Controls.ItemCollection list)
         {
+            if (uc is null)
+            {
+                uc = new Home();
+            }
+
+            // TODO: Get page titles from languages
+            PageTitle.Text = uc.Title;
+            uc.MainWindow = this;
+            uc.DataContext = DataContext;
+
+            ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
+            BackAvailable.OnNext(buttons == Buttons.Back);
+            ForwardAvailable.OnNext(buttons == Buttons.Forward);
+            OKAvailable.OnNext(buttons == Buttons.OK);
+            CancelAvailable.OnNext(buttons == Buttons.Cancel);
+            list.Add(uc);
             if (clear)
             {
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (list[i] is AUC auc)
                     {
+                        if (auc == uc || auc == ContentCarousel.SelectedItem) { continue; }
                         auc.MainWindow = null;
                         list.Remove(auc);
                     }
                 }
-                list.Clear();
             }
-            // TODO: Get page titles from languages
-            PageTitle.Text = uc.Title;
-            uc.MainWindow = this;
-            uc.DataContext = DataContext;
-            list.Add(uc);
-            ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
-            BackAvailable.OnNext(buttons == Buttons.Back);
-            ForwardAvailable.OnNext(buttons == Buttons.Forward);
-            OKAvailable.OnNext(buttons == Buttons.OK);
-            CancelAvailable.OnNext(buttons == Buttons.Cancel);
+            ContentCarousel.Next();
         }
     }
 
@@ -162,5 +181,41 @@ public partial class MainWindow : Window
                 ? ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount
                 : false
         );
+    }
+
+    private void OpenSettings(object? s, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        OnOKPressed += (s, e) =>
+        {
+            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
+            {
+                mw.SwitchTo(null, Buttons.None, true);
+            }
+        };
+        SwitchTo(new Settings(), Buttons.OK, true);
+    }
+
+    private void OpenAbout(object? s, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        OnOKPressed += (s, e) =>
+        {
+            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
+            {
+                mw.SwitchTo(null, Buttons.None, true);
+            }
+        };
+        SwitchTo(new About(), Buttons.OK, true);
+    }
+
+    private void OpenSources(object? s, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        OnOKPressed += (s, e) =>
+        {
+            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
+            {
+                mw.SwitchTo(null, Buttons.None, true);
+            }
+        };
+        SwitchTo(new Sources(), Buttons.OK, true);
     }
 }

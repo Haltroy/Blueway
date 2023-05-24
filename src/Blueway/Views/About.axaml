@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Blueway.Views.About">
+	<ScrollViewer Margin="5 5 5 5">
+		<StackPanel Orientation="Vertical" Spacing="5">
+			<TextBlock FontSize="25" Text="About" />
+			<Separator />
+			<Panel Height="10" />
+			<StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10">
+				<Panel Height="10" />
+				<Image Width="64" Height="64" Source="/Assets/blueway-logo.png" />
+				<StackPanel Spacing="5" HorizontalAlignment="Center" Orientation="Horizontal">
+					<TextBlock FontSize="20" FontWeight="DemiBold"  Text="{Binding AppName}" />
+					<TextBlock Text="{Binding AppVersion}" />
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<TextBlock FontSize="15" TextAlignment="Center" Text="by " />
+					<Image VerticalAlignment="Center" Width="23" Height="23" Source="/Assets/haltroy-logo.png" />
+					<TextBlock FontSize="15" TextAlignment="Center" Text="haltroy" />
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
+					<Button Click="Navigate" Content="Website" Tag="https://haltroy.com" />
+					<Button Click="Navigate" Content="Twitter" Tag="https://twitter.com/haltroy" />
+					<Button Click="Navigate" Content="GitHub" Tag="https://github.com/haltroy" />
+					<Button Click="Navigate" Content="Mastodon" Tag="https://mastodon.online/@haltroy" />
+					<Button Click="Navigate" Content="Reddit" Tag="https://reddit.com/r/haltroy" />
+				</StackPanel>
+			</StackPanel>
+			<Panel Height="10" />
+			<StackPanel Orientation="Vertical" Spacing="5">
+				<TextBlock Text="Technologies used:" />
+				<Separator />
+				<StackPanel Orientation="Vertical" Spacing="10">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+						<Image Source="/Assets/fostrian-logo.png" Width="16" Height="16" />
+						<TextBlock Text="Fostrian" VerticalAlignment="Center" FontSize="15" />
+						<Button Content="Visit" Click="Navigate" Tag="https://github.com/haltroy/Fostrian" />
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+						<Image Source="/Assets/avalonia-logo.ico" Width="16" Height="16" />
+						<TextBlock Text="Avalonia UI" VerticalAlignment="Center" FontSize="15" />
+						<Button Content="Visit" Click="Navigate" Tag="https://avaloniaui.net/" />
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
+						<Image Source="/Assets/dotnet-logo.png" Width="16" Height="16" />
+						<TextBlock Text=".NET" VerticalAlignment="Center" FontSize="15" />
+						<Button Content="Visit" Click="Navigate" Tag="https://dotnet.microsoft.com/en-us/" />
+					</StackPanel>
+				</StackPanel>
+				<TextBlock Text="License:" />
+				<Separator />
+				<TextBox TextWrapping="Wrap" IsReadOnly="True" Name="License" />
+				<Panel Height="20" />
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>
