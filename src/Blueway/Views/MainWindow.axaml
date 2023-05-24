@@ -144,10 +144,18 @@ TransparencyLevelHint="{Binding TransparencyLevel}">
 					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
 				</Style>
 			</StackPanel.Styles>
-			<Button Content="{Binding Back}" Name="Back" Click="BackPressed" />
-			<Button Content="{Binding Forward}" Name="Forward" Click="ForwardPressed" />
-			<Button Content="{Binding Cancel}" Name="Cancel" Click="CancelPressed" />
-			<Button Content="{Binding OK}" Name="OK" Click="OKPressed" />
+			<Button Name="Back" Click="BackPressed">
+				<TextBlock Text="{Binding Back}" />
+			</Button>
+			<Button Name="Forward" Click="ForwardPressed">
+				<TextBlock Text="{Binding Forward}" />
+			</Button>
+			<Button Name="Cancel" Click="CancelPressed">
+				<TextBlock Text="{Binding Cancel}" />
+			</Button>
+			<Button Name="OK" Click="OKPressed">
+				<TextBlock Text="{Binding OK}" />
+			</Button>
 		</StackPanel>
 	</Grid>
 </Window>

@@ -22,11 +22,21 @@
 					<TextBlock FontSize="15" TextAlignment="Center" Text="haltroy" />
 				</StackPanel>
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
-					<Button Click="Navigate" Content="Website" Tag="https://haltroy.com" />
-					<Button Click="Navigate" Content="Twitter" Tag="https://twitter.com/haltroy" />
-					<Button Click="Navigate" Content="GitHub" Tag="https://github.com/haltroy" />
-					<Button Click="Navigate" Content="Mastodon" Tag="https://mastodon.online/@haltroy" />
-					<Button Click="Navigate" Content="Reddit" Tag="https://reddit.com/r/haltroy" />
+					<Button Click="Navigate" Tag="https://haltroy.com">
+						<TextBlock Text="Website" />
+					</Button>
+					<Button Click="Navigate" Tag="https://twitter.com/haltroy">
+						<TextBlock Text="Twitter" />
+					</Button>
+					<Button Click="Navigate" Tag="https://github.com/haltroy">
+						<TextBlock Text="GitHub" />
+					</Button>
+					<Button Click="Navigate" Tag="https://mastodon.online/@haltroy">
+						<TextBlock Text="Mastodon" />
+					</Button>
+					<Button Click="Navigate" Tag="https://reddit.com/r/haltroy">
+						<TextBlock Text="Reddit" />
+					</Button>
 				</StackPanel>
 			</StackPanel>
 			<Panel Height="10" />
@@ -38,19 +48,25 @@
 						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
 						<Image Source="/Assets/fostrian-logo.png" Width="16" Height="16" />
 						<TextBlock Text="Fostrian" VerticalAlignment="Center" FontSize="15" />
-						<Button Content="Visit" Click="Navigate" Tag="https://github.com/haltroy/Fostrian" />
+						<Button Content="Visit" Click="Navigate" Tag="https://github.com/haltroy/Fostrian">
+							<TextBlock Text="Visit" />
+						</Button>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal" Spacing="5">
 						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
 						<Image Source="/Assets/avalonia-logo.ico" Width="16" Height="16" />
 						<TextBlock Text="Avalonia UI" VerticalAlignment="Center" FontSize="15" />
-						<Button Content="Visit" Click="Navigate" Tag="https://avaloniaui.net/" />
+						<Button Content="Visit" Click="Navigate" Tag="https://avaloniaui.net/">
+							<TextBlock Text="Visit" />
+						</Button>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal" Spacing="5">
 						<TextBlock Text="●" VerticalAlignment="Center" FontSize="15" />
 						<Image Source="/Assets/dotnet-logo.png" Width="16" Height="16" />
 						<TextBlock Text=".NET" VerticalAlignment="Center" FontSize="15" />
-						<Button Content="Visit" Click="Navigate" Tag="https://dotnet.microsoft.com/en-us/" />
+						<Button Content="Visit" Click="Navigate" Tag="https://dotnet.microsoft.com/en-us/">
+							<TextBlock Text="Visit" />
+						</Button>
 					</StackPanel>
 				</StackPanel>
 				<TextBlock Text="License:" />
