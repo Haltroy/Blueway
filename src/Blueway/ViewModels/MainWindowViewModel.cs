@@ -1,9 +1,5 @@
 ﻿using Avalonia.Media;
 using System.Reflection;
-using Blueway;
-using Avalonia.Themes.Fluent;
-using Avalonia;
-using Avalonia.Platform;
 
 namespace Blueway.ViewModels;
 
@@ -52,8 +48,8 @@ public class MainWindowViewModel : ViewModelBase
 
     public bool IsDark => !Settings.CurrentTheme.Background.IsBright;
 
-    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel => Settings.CurrentTheme.UseAcrylic ?
-    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur : Avalonia.Controls.WindowTransparencyLevel.None;
+    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel => /* Settings.CurrentTheme.UseAcrylic ?
+    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur : */ Avalonia.Controls.WindowTransparencyLevel.None;
 
     public string OK => "OK";
     public string Cancel => "Cancel";

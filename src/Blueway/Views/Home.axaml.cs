@@ -1,9 +1,11 @@
-using Avalonia.Controls;
-
 namespace Blueway.Views
 {
     public partial class Home : AUC
     {
+        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+
+        public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.None;
+
         public Home()
         {
             InitializeComponent();
@@ -15,7 +17,7 @@ namespace Blueway.Views
             if (MainWindow != null)
             {
                 // TODO: Backup the latest entry
-                MainWindow.SwitchTo(new BackupProcess(), MainWindow.Buttons.Cancel, true);
+                MainWindow.SwitchTo(new BackupProcess());
             }
         }
 
@@ -23,7 +25,7 @@ namespace Blueway.Views
         {
             if (MainWindow != null)
             {
-                MainWindow.SwitchTo(new BackupCustomize(), MainWindow.Buttons.Back, false);
+                MainWindow.SwitchTo(new BackupCustomize());
             }
         }
 
@@ -32,7 +34,7 @@ namespace Blueway.Views
             if (MainWindow != null)
             {
                 // TODO: Show a window to select which backup to load from or add backup source.
-                MainWindow.SwitchTo(new BackupProcess(), MainWindow.Buttons.Cancel, true);
+                MainWindow.SwitchTo(new BackupProcess());
             }
         }
 

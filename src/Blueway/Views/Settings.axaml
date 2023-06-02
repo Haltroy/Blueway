@@ -39,7 +39,20 @@
 				<TextBlock VerticalAlignment="Center" Name="ThreadCountText" Text="2" />
 			</StackPanel>
 			<TextBox IsReadOnly="True" Text="Determines how many jobs should be executed at that time. Might speed up backups but might use a lot of resources." TextWrapping="Wrap" />
-			<Panel Height="10" />
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<Panel Height="10" />
+				<TextBlock FontSize="25" Text="Sources" />
+				<Button Click="AddNew">
+					<TextBlock Text="Add new..." />
+				</Button>
+				<!-- DO NOT REMOVE THESE BUTTONS DESPITE SERVING NO PURPOSE! -->
+				<!-- THEY ARE REQUIRED FOR THE DELETE BUTTONS TO DISPLAY THE IMAGE PROPERLY -->
+				<Button IsVisible="False" IsEnabled="{Binding IsDark}" Name="IsDark_ShadowButton" />
+				<Button IsVisible="False" IsEnabled="{Binding !IsDark}" Name="IsNotDark_ShadowButton" />
+				<!-- DO NOT DELETE THE BUTTONS ABOVE -->
+			</StackPanel>
+			<Separator />
+			<StackPanel Name="SourcesPanel" Orientation="Vertical" Spacing="5" />
 		</StackPanel>
 	</ScrollViewer>
 </UserControl>

@@ -1,10 +1,18 @@
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using System;
 
 namespace Blueway.Views
 {
     public partial class Settings : AUC
     {
+        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+
+        public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.OK;
+
         public Settings()
         {
             InitializeComponent();
@@ -56,8 +64,66 @@ namespace Blueway.Views
                     if (MainWindow != null)
                     { MainWindow.RefreshTheme(); }
                 };
+
+                LoadAllSources(settings);
             }
             return this;
+        }
+
+        public Settings LoadAllSources(Blueway.Settings settings)
+        {
+            for (int i = 0; i < settings.Sources.Count; i++)
+            {
+                SourcesPanel.Children.Add(GenerateSource(settings.Sources[i]));
+            }
+            return this;
+        }
+
+        public StackPanel GenerateSource(Blueway.AppSource source)
+        {
+            StackPanel panel = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
+            Button delButton = new();
+            delButton.Click += (s, e) =>
+            {
+                // TODO: Ask confirmation
+                source.Delete();
+                SourcesPanel.Children.Remove(panel);
+            };
+            Panel delButtonpanel = new();
+            Image delButton_b = new();
+            delButton_b.Bind(IsVisibleProperty, IsNotDark_ShadowButton.GetObservable(IsEnabledProperty));
+            Image delButton_w = new();
+            delButton_w.Bind(IsVisibleProperty, IsDark_ShadowButton.GetObservable(IsEnabledProperty));
+            delButtonpanel.Children.Add(delButton_b);
+            delButtonpanel.Children.Add(delButton_w);
+
+            delButton.Content = delButtonpanel;
+            panel.Children.Add(delButton);
+
+            StackPanel detailsPanel = new() { Orientation = Avalonia.Layout.Orientation.Vertical, Spacing = 5 };
+
+            StackPanel titlePanel = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
+            detailsPanel.Children.Add(titlePanel);
+
+            Image sourceLogo = new() { Width = 16, Height = 16 };
+            sourceLogo.Source = System.IO.File.Exists(source.IconPath)
+                ? new Bitmap(new System.IO.FileStream(source.IconPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+                : (Avalonia.Media.IImage)new Bitmap(AssetLoader.Open(new Uri("/Assets/blueway-logo.png")));
+
+            titlePanel.Children.Add(sourceLogo);
+
+            TextBlock title = new() { FontSize = 20, Text = source.Name };
+            titlePanel.Children.Add(title);
+
+            TextBlock desc = new() { Text = source.Description };
+            detailsPanel.Children.Add(desc);
+
+            return panel;
+        }
+
+        public void AddNew(object? s, RoutedEventArgs e)
+        {
+            // TODO
         }
     }
 }

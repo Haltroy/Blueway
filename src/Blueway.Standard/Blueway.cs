@@ -41,6 +41,16 @@ namespace Blueway
 
         public List<BackupAction> Actions { get; set; }
 
+        public delegate void OnEventDelegate(BackupSchema schema);
+
+        public delegate void OnProgressChangeDelegate(BackupSchema schema, Progress progress);
+
+        public event OnEventDelegate OnStart;
+
+        public event OnEventDelegate OnEnd;
+
+        public event OnProgressChangeDelegate OnProgressChange;
+
         public void Run()
         {
         }
@@ -115,12 +125,17 @@ namespace Blueway
         /// Delegate event for <see cref="OnDone" />.
         /// </summary>
         /// <param name="action">Action that is done.</param>
-        public delegate void OnDoneDelegate(BackupAction action);
+        public delegate void OnEventDelegate(BackupAction action);
 
         /// <summary>
         /// Event raised when this action has done. This event should be raised by the schema itself.
         /// </summary>
-        public event OnDoneDelegate OnDone;
+        public event OnEventDelegate OnDone;
+
+        /// <summary>
+        /// Event raised when this action is started. This event should be raised by the schema itself.
+        /// </summary>
+        public event OnEventDelegate OnStart;
 
         /// <summary>
         /// Name of the action. Used for translation.
@@ -194,5 +209,7 @@ namespace Blueway
         /// Total size of the progress.
         /// </summary>
         public int Total { get; set; }
+
+        public bool IsIndeterminate { get; set; }
     }
 }

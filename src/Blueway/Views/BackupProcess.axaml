@@ -18,34 +18,25 @@
 			<StackPanel Orientation="Vertical">
 				<DockPanel LastChildFill="True">
 					<TextBlock DockPanel.Dock="Left" Text="Total Progress" />
-					<TextBlock DockPanel.Dock="Right" Text="25%" />
+					<TextBlock Name="TotalPerc" DockPanel.Dock="Right" />
 					<Panel />
 				</DockPanel>
-				<ProgressBar Value="25" />
-				<TextBlock HorizontalAlignment="Right" Text="1h left." />
+				<ProgressBar Name="TotalProgress" IsIndeterminate="True" />
+				<TextBlock Name="TotalLeft" HorizontalAlignment="Right" />
 				<Panel Height="50" />
 				<DockPanel LastChildFill="True">
-					<TextBlock DockPanel.Dock="Left" Text="Progress: Copying files" />
-					<TextBlock DockPanel.Dock="Right" Text="Unknown" />
+					<TextBlock DockPanel.Dock="Left" Text="Progress:" Margin="0 0 5 0" />
+					<TextBlock Name="CurrentName" DockPanel.Dock="Left" />
+					<TextBlock Name="CurrentPerc" DockPanel.Dock="Right" />
 					<Panel />
 				</DockPanel>
-				<ProgressBar IsIndeterminate="True" />
-				<TextBlock HorizontalAlignment="Right" Text="1h left." />
+				<ProgressBar Name="CurrentProgress" IsIndeterminate="True" />
+				<TextBlock Name="CurrentLeft" HorizontalAlignment="Right" />
 				<Panel Height="20" />
 				<StackPanel Orientation="Horizontal" Spacing="10">
 					<Panel Width="40" />
 					<ScrollViewer>
-						<StackPanel  Orientation="Vertical">
-							<!-- EXAMPLE ITEM -->
-							<StackPanel Orientation="Horizontal">
-								<Panel>
-									<Image IsVisible="False" Source="/Assets/avalonia-logo.ico" Width="16" Height="16" />
-									<progRing:ProgressRing Width="80" Height="20" IsActive="True" />
-								</Panel>
-								<TextBlock Text="Copying files..." />
-							</StackPanel>
-							<!-- EXAMPLE ITEM -->
-						</StackPanel>
+						<StackPanel  Orientation="Vertical" />
 					</ScrollViewer>
 				</StackPanel>
 			</StackPanel>

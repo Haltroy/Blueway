@@ -51,6 +51,7 @@ namespace Blueway
         public int ThreadCount { get; set; } = 2;
         public Theme CurrentTheme { get; set; } = DefaultThemes.Light;
         public BackupActionType[] BackupActionTypes { get; set; }
+        public List<AppSource> Sources { get; set; } = new List<AppSource>();
 
         public List<Theme> Themes { get; set; } = new List<Theme>() { DefaultThemes.Light, DefaultThemes.Dark, DefaultThemes.Breath, DefaultThemes.Breeze, DefaultThemes.Backupster };
 

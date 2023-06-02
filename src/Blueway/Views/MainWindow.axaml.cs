@@ -1,12 +1,9 @@
-using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
-using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
+using Avalonia.Controls.ApplicationLifetimes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 namespace Blueway.Views;
 
@@ -17,39 +14,45 @@ public partial class MainWindow : Window
     private Subject<bool> CancelAvailable = new Subject<bool>();
     private Subject<bool> OKAvailable = new Subject<bool>();
 
-    private List<EventHandler> okdelegates = new List<EventHandler>();
-    private List<EventHandler> canceldelegates = new List<EventHandler>();
+    private bool allowClose = false;
 
-    private event EventHandler? OKPress;
-
-    public event EventHandler OnOKPressed
+    public MainWindow ShowTrayIcon()
     {
-        add
+        TrayIcon tray = new();
+        tray.Icon = this.Icon;
+
+        NativeMenu menu = new();
+
+        NativeMenuItem showMW = new() { Header = "Show" };
+        showMW.Click += (s, e) => Show();
+        menu.Items.Add(showMW);
+
+        NativeMenuItem exit = new() { Header = "Exit" };
+        exit.Click += (s, e) =>
         {
-            OKPress += value;
-            okdelegates.Add(value);
-        }
-        remove
-        {
-            OKPress -= value;
-            okdelegates.Remove(value);
-        }
+            tray.IsVisible = false;
+            tray.Dispose();
+            allowClose = true;
+            Close();
+            if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            {
+                lifetime.TryShutdown(0);
+            }
+        };
+        menu.Items.Add(exit);
+
+        tray.IsVisible = true;
+        tray.Menu = menu;
+
+        return this;
     }
 
-    private event EventHandler? CancelPress;
+    private bool IsBackground = false;
 
-    public event EventHandler OnCancelPressed
+    public MainWindow AsBackground(bool bg = false)
     {
-        add
-        {
-            CancelPress += value;
-            canceldelegates.Add(value);
-        }
-        remove
-        {
-            CancelPress -= value;
-            canceldelegates.Remove(value);
-        }
+        IsBackground = bg;
+        return this;
     }
 
     internal void RefreshTheme(Theme? theme = null)
@@ -85,6 +88,25 @@ public partial class MainWindow : Window
         Cancel.Bind(IsEnabledProperty, CancelAvailable);
         SwitchTo(new Home());
         RefreshTheme();
+        Activated += MW_Activated;
+    }
+
+    private void MW_Activated(object? sender, EventArgs e)
+    {
+        if (IsBackground)
+        {
+            Hide();
+            Activated -= MW_Activated;
+        }
+    }
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (!allowClose)
+        {
+            e.Cancel = true;
+            Hide();
+        }
     }
 
     [Flags]
@@ -97,7 +119,7 @@ public partial class MainWindow : Window
         Cancel
     }
 
-    public void SwitchTo(AUC? uc = null, Buttons buttons = Buttons.None, bool clear = false)
+    public void SwitchTo(AUC? uc = null)
     {
         if (ContentCarousel.Items is Avalonia.Controls.ItemCollection list)
         {
@@ -112,61 +134,84 @@ public partial class MainWindow : Window
             uc.DataContext = DataContext;
 
             ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
-            BackAvailable.OnNext(buttons == Buttons.Back);
-            ForwardAvailable.OnNext(buttons == Buttons.Forward);
-            OKAvailable.OnNext(buttons == Buttons.OK);
-            CancelAvailable.OnNext(buttons == Buttons.Cancel);
+            BackAvailable.OnNext(uc.DisplayButtons == Buttons.Back);
+            ForwardAvailable.OnNext(uc.DisplayButtons == Buttons.Forward);
+            OKAvailable.OnNext(uc.DisplayButtons == Buttons.OK);
+            CancelAvailable.OnNext(uc.DisplayButtons == Buttons.Cancel);
             list.Add(uc);
-            if (clear)
+
+            for (int i = 0; i < list.Count; i++)
             {
-                for (int i = 0; i < list.Count; i++)
+                if (list[i] is AUC auc)
                 {
-                    if (list[i] is AUC auc)
-                    {
-                        if (auc == uc || auc == ContentCarousel.SelectedItem) { continue; }
-                        auc.MainWindow = null;
-                        list.Remove(auc);
-                    }
+                    if (auc == uc || auc == ContentCarousel.SelectedItem) { continue; }
+                    auc.MainWindow = null;
+                    list.Remove(auc);
                 }
             }
+
             ContentCarousel.Next();
+            CleanupCarousel();
+            CleanupCarousel(20000);
         }
+    }
+
+    private async void CleanupCarousel(int ms = 2000)
+    {
+        await Task.Run(() =>
+        {
+            System.Threading.Thread.Sleep(ms);
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                for (int i = 0; i < ContentCarousel.ItemCount; i++)
+                {
+                    if (i != ContentCarousel.SelectedIndex)
+                    {
+                        ContentCarousel.Items.RemoveAt(i);
+                    }
+                }
+            }, Avalonia.Threading.DispatcherPriority.Background);
+            GC.Collect();
+        });
+    }
+
+    private void ShowAbout(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    {
+        SwitchTo(new About());
     }
 
     private void BackPressed(object? s, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (ContentCarousel.SelectedIndex > 0)
+        if (ContentCarousel.SelectedItem is AUC auc)
         {
-            ContentCarousel.SelectedIndex--;
+            SwitchTo(auc.ReturnTo(Buttons.Back));
         }
         UpdateButtons();
     }
 
     private void ForwardPressed(object? s, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount)
+        if (ContentCarousel.SelectedItem is AUC auc)
         {
-            ContentCarousel.SelectedIndex++;
+            SwitchTo(auc.ReturnTo(Buttons.Forward));
         }
         UpdateButtons();
     }
 
     private void OKPressed(object? s, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        OKPress?.Invoke(s, e);
-        for (int i = 0; i < okdelegates.Count; i++)
+        if (ContentCarousel.SelectedItem is AUC auc)
         {
-            OnOKPressed -= okdelegates[i];
+            SwitchTo(auc.ReturnTo(Buttons.OK));
         }
         UpdateButtons();
     }
 
     private void CancelPressed(object? s, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        CancelPress?.Invoke(s, e);
-        for (int i = 0; i < canceldelegates.Count; i++)
+        if (ContentCarousel.SelectedItem is AUC auc)
         {
-            OnCancelPressed -= canceldelegates[i];
+            SwitchTo(auc.ReturnTo(Buttons.Cancel));
         }
         UpdateButtons();
     }
@@ -185,37 +230,6 @@ public partial class MainWindow : Window
 
     private void OpenSettings(object? s, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        OnOKPressed += (s, e) =>
-        {
-            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
-            {
-                mw.SwitchTo(null, Buttons.None, true);
-            }
-        };
-        SwitchTo(new Settings(), Buttons.OK, true);
-    }
-
-    private void OpenAbout(object? s, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        OnOKPressed += (s, e) =>
-        {
-            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
-            {
-                mw.SwitchTo(null, Buttons.None, true);
-            }
-        };
-        SwitchTo(new About(), Buttons.OK, true);
-    }
-
-    private void OpenSources(object? s, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        OnOKPressed += (s, e) =>
-        {
-            if (s is Button button && button.Parent is StackPanel panel && panel.Parent is Grid grid && grid.Parent is MainWindow mw)
-            {
-                mw.SwitchTo(null, Buttons.None, true);
-            }
-        };
-        SwitchTo(new Sources(), Buttons.OK, true);
+        SwitchTo(new Settings());
     }
 }
