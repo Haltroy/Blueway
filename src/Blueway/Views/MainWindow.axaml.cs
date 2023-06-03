@@ -23,6 +23,8 @@ public partial class MainWindow : Window
 
         NativeMenu menu = new();
 
+        // TODO: Add more and add translations
+
         NativeMenuItem showMW = new() { Header = "Show" };
         showMW.Click += (s, e) => Show();
         menu.Items.Add(showMW);

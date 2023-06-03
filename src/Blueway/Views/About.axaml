@@ -9,7 +9,7 @@
 			<TextBlock FontSize="25" Text="About" />
 			<Separator />
 			<Panel Height="10" />
-			<StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10">
+			<StackPanel Orientation="Vertical" Spacing="10">
 				<Panel Height="10" />
 				<Image Width="64" Height="64" Source="/Assets/blueway-logo.png" />
 				<StackPanel Spacing="5" HorizontalAlignment="Center" Orientation="Horizontal">

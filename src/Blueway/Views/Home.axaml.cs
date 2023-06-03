@@ -42,7 +42,7 @@ namespace Blueway.Views
         {
             if (MainWindow != null)
             {
-                // TODO: Show a window to select which auto-backup to edit or to create a new auto-backup
+                MainWindow.SwitchTo(new AutoBackups());
             }
         }
     }

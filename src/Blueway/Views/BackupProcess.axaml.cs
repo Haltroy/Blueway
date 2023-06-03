@@ -4,7 +4,15 @@ namespace Blueway.Views
 {
     public partial class BackupProcess : AUC
     {
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+        private AUC GoBackTo;
+
+        public override AUC ReturnTo(MainWindow.Buttons buttons) => GoBackTo ?? new Home();
+
+        public BackupProcess GoBackToAUC(AUC auc)
+        {
+            GoBackTo = auc;
+            return this;
+        }
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.Cancel;
 

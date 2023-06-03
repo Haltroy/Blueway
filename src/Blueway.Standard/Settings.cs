@@ -232,6 +232,7 @@ namespace Blueway
                 {
                     string extFile = exts[i];
 
+                    // do not laugh
                     var ext_ass = Assembly.Load(extFile);
                     var ass_types = ext_ass.GetExportedTypes();
 

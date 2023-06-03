@@ -12,6 +12,16 @@ namespace Blueway.Views
             InitializeComponent();
         }
 
+        private AUC GoBackTo;
+
+        public override AUC ReturnTo(MainWindow.Buttons buttons) => GoBackTo ?? new Home();
+
+        public BackupCustomize GoBackToAUC(AUC auc)
+        {
+            GoBackTo = auc;
+            return this;
+        }
+
         private BackupCustomize LoadActions()
         {
             MenuFlyout mfo = new();
@@ -46,8 +56,6 @@ namespace Blueway.Views
                 flyout.ShowAt(btn);
             }
         }
-
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.Back;
     }
