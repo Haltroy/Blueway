@@ -23,6 +23,6 @@ namespace Blueway.Views
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.Back;
 
-        public override AUC ReturnTo(MainWindow.Buttons button) => new Home();
+        public override AUC? ReturnTo(MainWindow.Buttons button) => null;
     }
 }

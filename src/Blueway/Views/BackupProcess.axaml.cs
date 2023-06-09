@@ -6,7 +6,7 @@ namespace Blueway.Views
     {
         private AUC GoBackTo;
 
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => GoBackTo ?? new Home();
+        public override AUC? ReturnTo(MainWindow.Buttons buttons) => GoBackTo;
 
         public BackupProcess GoBackToAUC(AUC auc)
         {

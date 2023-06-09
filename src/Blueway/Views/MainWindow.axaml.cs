@@ -14,12 +14,15 @@ public partial class MainWindow : Window
     private Subject<bool> CancelAvailable = new Subject<bool>();
     private Subject<bool> OKAvailable = new Subject<bool>();
 
+    public Home HomeScreen;
+
     private bool allowClose = false;
 
     public MainWindow ShowTrayIcon()
     {
         TrayIcon tray = new();
         tray.Icon = this.Icon;
+        tray.Clicked += (s, e) => { if (IsVisible) { Hide(); } else { Show(); } };
 
         NativeMenu menu = new();
 
@@ -28,6 +31,22 @@ public partial class MainWindow : Window
         NativeMenuItem showMW = new() { Header = "Show" };
         showMW.Click += (s, e) => Show();
         menu.Items.Add(showMW);
+
+        menu.Items.Add(new NativeMenuItemSeparator());
+
+        NativeMenuItem showHome = new() { Header = "Home" };
+        showHome.Click += (s, e) => { Show(); HomeScreen = new Home(); SwitchTo(null); };
+        menu.Items.Add(showHome);
+
+        NativeMenuItem showAuto = new() { Header = "Automated backups..." };
+        showAuto.Click += (s, e) => { Show(); SwitchTo(new AutoBackups()); };
+        menu.Items.Add(showAuto);
+
+        NativeMenuItem showSettings = new() { Header = "Settings" };
+        showSettings.Click += (s, e) => { Show(); OpenSettings(s, new Avalonia.Interactivity.RoutedEventArgs()); };
+        menu.Items.Add(showSettings);
+
+        menu.Items.Add(new NativeMenuItemSeparator());
 
         NativeMenuItem exit = new() { Header = "Exit" };
         exit.Click += (s, e) =>
@@ -88,7 +107,8 @@ public partial class MainWindow : Window
         OK.Bind(IsEnabledProperty, OKAvailable);
         Cancel.Bind(IsVisibleProperty, CancelAvailable);
         Cancel.Bind(IsEnabledProperty, CancelAvailable);
-        SwitchTo(new Home());
+        HomeScreen = new Home();
+        SwitchTo(HomeScreen);
         RefreshTheme();
         Activated += MW_Activated;
     }
@@ -123,39 +143,40 @@ public partial class MainWindow : Window
 
     public void SwitchTo(AUC? uc = null)
     {
-        if (ContentCarousel.Items is Avalonia.Controls.ItemCollection list)
+        if (HomeScreen is null)
         {
-            if (uc is null)
-            {
-                uc = new Home();
-            }
-
-            // TODO: Get page titles from languages
-            PageTitle.Text = uc.Title;
-            uc.MainWindow = this;
-            uc.DataContext = DataContext;
-
-            ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
-            BackAvailable.OnNext(uc.DisplayButtons == Buttons.Back);
-            ForwardAvailable.OnNext(uc.DisplayButtons == Buttons.Forward);
-            OKAvailable.OnNext(uc.DisplayButtons == Buttons.OK);
-            CancelAvailable.OnNext(uc.DisplayButtons == Buttons.Cancel);
-            list.Add(uc);
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i] is AUC auc)
-                {
-                    if (auc == uc || auc == ContentCarousel.SelectedItem) { continue; }
-                    auc.MainWindow = null;
-                    list.Remove(auc);
-                }
-            }
-
-            ContentCarousel.Next();
-            CleanupCarousel();
-            CleanupCarousel(20000);
+            HomeScreen = new Home();
         }
+        if (uc is null)
+        {
+            uc = HomeScreen;
+        }
+
+        // TODO: Get page titles from languages
+        PageTitle.Text = uc.Title;
+        uc.MainWindow = this;
+        uc.DataContext = DataContext;
+
+        ContentCarousel.SelectedIndex = ContentCarousel.ItemCount - 1;
+        BackAvailable.OnNext(uc.DisplayButtons == Buttons.Back);
+        ForwardAvailable.OnNext(uc.DisplayButtons == Buttons.Forward);
+        OKAvailable.OnNext(uc.DisplayButtons == Buttons.OK);
+        CancelAvailable.OnNext(uc.DisplayButtons == Buttons.Cancel);
+        ContentCarousel.Items.Add(uc);
+
+        for (int i = 0; i < ContentCarousel.Items.Count; i++)
+        {
+            if (ContentCarousel.Items[i] is AUC auc)
+            {
+                if (auc == uc || auc == ContentCarousel.SelectedItem || auc == HomeScreen) { continue; }
+                auc.MainWindow = null;
+                ContentCarousel.Items.Remove(auc);
+            }
+        }
+
+        ContentCarousel.Next();
+        CleanupCarousel();
+        CleanupCarousel(20000);
     }
 
     private async void CleanupCarousel(int ms = 2000)
@@ -167,7 +188,7 @@ public partial class MainWindow : Window
             {
                 for (int i = 0; i < ContentCarousel.ItemCount; i++)
                 {
-                    if (i != ContentCarousel.SelectedIndex)
+                    if (i != ContentCarousel.SelectedIndex && ContentCarousel.Items[i] != HomeScreen)
                     {
                         ContentCarousel.Items.RemoveAt(i);
                     }

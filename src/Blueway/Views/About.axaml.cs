@@ -11,7 +11,7 @@ namespace Blueway.Views
             Initialized += (s, e) => { License.Text = Tools.ReadResource("Blueway.LICENSE"); };
         }
 
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+        public override AUC? ReturnTo(MainWindow.Buttons buttons) => null;
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.OK;
 

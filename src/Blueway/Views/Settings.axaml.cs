@@ -9,7 +9,7 @@ namespace Blueway.Views
 {
     public partial class Settings : AUC
     {
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+        public override AUC? ReturnTo(MainWindow.Buttons buttons) => null;
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.OK;
 

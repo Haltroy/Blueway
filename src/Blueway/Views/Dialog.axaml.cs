@@ -14,6 +14,6 @@ namespace Blueway.Views
 
         public override MainWindow.Buttons DisplayButtons => Buttons;
 
-        public override AUC ReturnTo(MainWindow.Buttons button) => Caller;
+        public override AUC? ReturnTo(MainWindow.Buttons button) => Caller;
     }
 }

@@ -1,8 +1,9 @@
 namespace Blueway.Views
 {
+    // TODO: Use Avalonia MVVM for the recent backups.
     public partial class Home : AUC
     {
-        public override AUC ReturnTo(MainWindow.Buttons buttons) => new Home();
+        public override AUC? ReturnTo(MainWindow.Buttons buttons) => null;
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.None;
 
