@@ -7,16 +7,14 @@ namespace Blueway
     {
         public void Register(Settings settings)
         {
-            // OPTIMIZE
-            List<BackupActionType> list = new List<BackupActionType>(settings.BackupActionTypes);
-            list.Add(this);
-            settings.BackupActionTypes = list.ToArray();
+            settings.RegisterBackupActionType(this);
         }
 
         public abstract BackupAction GenerateAction();
 
         public abstract BackupActionProperty[] GetProperties();
     }
+
     public class BackupActionProperty
     {
         public BackupActionProperty(string name, string description, BackupActionPropertyValueType valueType, OnChangeDelegate on_change, object defaultValue = null, string[] options = null)

@@ -48,8 +48,27 @@ public class MainWindowViewModel : ViewModelBase
 
     public bool IsDark => !Settings.CurrentTheme.Background.IsBright;
 
-    public Avalonia.Controls.WindowTransparencyLevel TransparencyLevel => /* Settings.CurrentTheme.UseAcrylic ?
-    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur : */ Avalonia.Controls.WindowTransparencyLevel.None;
+    public Avalonia.Controls.WindowTransparencyLevel[] TransparencyLevel
+    {
+        get
+        {
+            if (Settings.CurrentTheme.UseAcrylic)
+            {
+                return new Avalonia.Controls.WindowTransparencyLevel[]
+                {
+                    Avalonia.Controls.WindowTransparencyLevel.Mica ,
+                    Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur ,
+                    Avalonia.Controls.WindowTransparencyLevel.Blur,
+                    Avalonia.Controls.WindowTransparencyLevel.Transparent,
+                    Avalonia.Controls.WindowTransparencyLevel.None,
+                };
+            }
+            else
+            {
+                return new Avalonia.Controls.WindowTransparencyLevel[] { Avalonia.Controls.WindowTransparencyLevel.None };
+            }
+        }
+    }
 
     public string OK => "OK";
     public string Cancel => "Cancel";

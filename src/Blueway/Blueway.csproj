@@ -39,4 +39,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Blueway.Standard\Blueway.Standard.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Dialog.axaml" />
+  </ItemGroup>
 </Project>

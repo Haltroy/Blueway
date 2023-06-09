@@ -11,6 +11,7 @@ Closing="OnClosing"
 Title="{Binding AppName}"
 Background="{Binding BackColor}"
 Foreground="{Binding ForeColor}"
+TransparencyBackgroundFallback="{Binding BackColor}"
 TransparencyLevelHint="{Binding TransparencyLevel}">
 
 	<Design.DataContext>

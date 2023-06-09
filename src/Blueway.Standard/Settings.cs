@@ -210,6 +210,14 @@ namespace Blueway
             return this;
         }
 
+        public void RegisterBackupActionType(BackupActionType action)
+        {
+            BackupActionType[] _bat = BackupActionTypes;
+            Array.Resize(ref _bat, _bat.Length + 1);
+            _bat[_bat.Length - 1] = action;
+            BackupActionTypes = _bat;
+        }
+
         public Settings AutoLoadExtensions()
         {
             if (GlobalEnableExtensionLoading && GlobalEnableExtensions && EnableExtensions)

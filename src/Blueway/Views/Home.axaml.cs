@@ -16,7 +16,7 @@ namespace Blueway.Views
         {
             if (MainWindow != null)
             {
-                // TODO: Backup the latest entry
+                // TODO: Backup the latest entry, otherwise create a custom one instead.
                 MainWindow.SwitchTo(new BackupProcess());
             }
         }
