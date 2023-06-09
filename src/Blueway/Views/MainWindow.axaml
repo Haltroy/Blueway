@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<Window xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:vm="using:Blueway.ViewModels"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+mc:Ignorable="d" Width="700" Height="600" d:DesignWidth="{Binding Width}" d:DesignHeight="{Binding Height}"
+x:Class="Blueway.Views.MainWindow"
+Icon="/Assets/blueway-logo.ico"
+Closing="OnClosing"
+Title="{Binding AppName}"
+Background="{Binding BackColor}"
+Foreground="{Binding ForeColor}"
+TransparencyBackgroundFallback="{Binding BackColor}"
+TransparencyLevelHint="{Binding TransparencyLevel}">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+
+	<Grid Name="ContentGrid" RowDefinitions="40,*,Auto">
+
+		<Grid Name="TitleBar" Grid.Row="0" ColumnDefinitions="*,*,Auto">
+			<StackPanel Spacing="5" Margin="0 5 5 0" Orientation="Horizontal" Grid.Column="2">
+				<Button Click="OpenSettings">
+					<Panel>
+						<Image Source="/Assets/settings-b.png" IsVisible="{Binding !IsDark}" Width="16" Height="{Binding Width}" />
+						<Image Source="/Assets/settings-w.png" IsVisible="{Binding IsDark}" Width="16" Height="{Binding Width}" />
+					</Panel>
+				</Button>
+			</StackPanel>
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5 5 0 0" Background="#01000000" Spacing="5">
+				<StackPanel Orientation="Horizontal" PointerPressed="ShowAbout">
+					<Image Margin="5" VerticalAlignment="Center" Source="/Assets/blueway-logo.png" />
+					<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" FontWeight="UltraBlack" Text="{Binding AppName}" />
+					<TextBlock Margin="5" Text="{Binding AppVersion}" />
+				</StackPanel>
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="10" Text=">" />
+				<TextBlock Margin="5" VerticalAlignment="Center" FontSize="20" Name="PageTitle" />
+			</StackPanel>
+		</Grid>
+		<Carousel Grid.Row="1" Name="ContentCarousel">
+			<Carousel.Styles>
+				<Style Selector="Button">
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover ContentPresenter">
+					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+				<Style Selector="AccessText">
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover AccessText">
+					<Setter Property="Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+				<Style Selector="ToggleSwitch">
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="ProgressBar">
+					<Setter Property="Foreground" Value="{Binding OverlayColor}" />
+				</Style>
+				<Style Selector="TextBox">
+					<Setter Property="Background" Value="{Binding BackColor2}" />
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="TextBox:pointerover">
+					<Setter Property="Background" Value="{Binding BackColor2}" />
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="TextBox:focus">
+					<Setter Property="Background" Value="{Binding BackColor2}" />
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="TextBox Border#PART_BorderElement">
+					<Setter Property="IsVisible" Value="False" />
+				</Style>
+				<Style Selector="TextBox:pointerover Border#PART_BorderElement">
+					<Setter Property="IsVisible" Value="False" />
+				</Style>
+				<Style Selector="TextBox:focus Border#PART_BorderElement">
+					<Setter Property="IsVisible" Value="False" />
+				</Style>
+				<Style Selector="ToggleSwitch:unchecked > Grid > Grid > Border#OuterBorder">
+					<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="ToggleSwitch:unchecked > Grid > Grid > Canvas > Grid > Ellipse#SwitchKnobOff">
+					<Setter Property="Fill" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="ToggleSwitch:checked > Grid > Grid > Border#SwitchKnobBounds">
+					<Setter Property="BorderBrush" Value="{Binding OverlayColor}" />
+					<Setter Property="Background" Value="{Binding OverlayColor}" />
+				</Style>
+				<Style Selector="ToggleSwitch:checked > Grid > Grid > Canvas > Grid > Ellipse#SwitchKnobOn">
+					<Setter Property="Fill" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Separator">
+					<Setter Property="Background" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="ComboBox">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+					<Setter Property="Background" Value="{Binding BackColor}" />
+					<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="ComboBox Popup">
+					<Style Selector="^ PopupRoot Border">
+						<Setter Property="Background" Value="{Binding BackColor}" />
+						<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+					</Style>
+					<Style Selector="^ PathIcon">
+						<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					</Style>
+				</Style>
+				<Style Selector="ComboBox:pointerover Popup">
+					<Style Selector="^ PathIcon:pointerover">
+						<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					</Style>
+				</Style>
+				<Style Selector="ComboBoxItem">
+					<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					<Setter Property="Background" Value="{Binding BackColor}" />
+					<!--  PointerOver state  -->
+					<Style Selector="^:pointerover /template/ ContentPresenter">
+						<Setter Property="Background" Value="{Binding BackColor2}" />
+						<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+						<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					</Style>
+
+					<!--  Disabled state  -->
+					<Style Selector="^:disabled /template/ ContentPresenter">
+						<Setter Property="Background" Value="{Binding BackColor}" />
+						<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+						<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					</Style>
+
+					<!--  Pressed state  -->
+					<Style Selector="^:pressed /template/ ContentPresenter">
+						<Setter Property="Background" Value="{Binding BackColor}" />
+						<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+						<Setter Property="Foreground" Value="{Binding ForeColor}" />
+					</Style>
+
+					<!--  Selected state  -->
+					<Style Selector="^:selected">
+						<Style Selector="^ /template/ ContentPresenter">
+							<Setter Property="Background" Value="{Binding OverlayColor}" />
+							<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+							<Setter Property="Foreground" Value="{Binding ForeColor}" />
+						</Style>
+						<!--  Selected Disabled state  -->
+						<Style Selector="^:disabled /template/ ContentPresenter">
+							<Setter Property="Background" Value="{Binding OverlayColor}" />
+							<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+							<Setter Property="Foreground" Value="{Binding ForeColor}" />
+						</Style>
+						<!--  Selected PointerOver state  -->
+						<Style Selector="^:pointerover /template/ ContentPresenter">
+							<Setter Property="Background" Value="{Binding OverlayColor2}" />
+							<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+							<Setter Property="Foreground" Value="{Binding ForeColor}" />
+						</Style>
+						<!--  Selected Pressed state  -->
+						<Style Selector="^:pressed /template/ ContentPresenter">
+							<Setter Property="Background" Value="{Binding OverlayColor}" />
+							<Setter Property="BorderBrush" Value="{Binding ForeColor}" />
+							<Setter Property="Foreground" Value="{Binding ForeColor}" />
+						</Style>
+					</Style>
+				</Style>
+				<!-- Slider /template/ Thumb /template/ Border -->
+				<Style Selector="Slider">
+					<Setter Property="TextElement.Foreground" Value="{Binding OverlayColor}" />
+					<Setter Property="Background" Value="{Binding ForeColor}" />
+					<Style Selector="^ /template/ Thumb">
+						<Setter Property="Background" Value="{Binding OverlayColor}" />
+					</Style>
+					<Style Selector="^ /template/ Thumb:pointerover">
+						<Setter Property="Background" Value="{Binding OverlayColor}" />
+					</Style>
+					<Style Selector="^ /template/ Thumb:pressed">
+						<Setter Property="Background" Value="{Binding OverlayColor}" />
+					</Style>
+				</Style>
+				<Style Selector="Slider:pointerover /template/ RepeatButton#PART_IncreaseButton">
+					<Setter Property="Background" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Slider:pointerover /template/ RepeatButton#PART_DecreaseButton">
+					<Setter Property="Background" Value="{Binding OverlayColor}" />
+				</Style>
+				<Style Selector="Slider:pressed /template/ RepeatButton#PART_IncreaseButton">
+					<Setter Property="Background" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Slider:pressed /template/ RepeatButton#PART_DecreaseButton">
+					<Setter Property="Background" Value="{Binding OverlayColor}" />
+				</Style>
+			</Carousel.Styles>
+
+			<Carousel.PageTransition>
+				<CompositePageTransition>
+					<CrossFade Duration="0:00:00.500" />
+				</CompositePageTransition>
+			</Carousel.PageTransition>
+		</Carousel>
+		<StackPanel Name="Navigation" Margin="5" Grid.Row="2" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
+			<StackPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor}" />
+				</Style>
+				<Style Selector="Button:pointerover /template/ ContentPresenter">
+					<Setter Property="TextBlock.Foreground" Value="{Binding ForeColor2}" />
+				</Style>
+			</StackPanel.Styles>
+			<Button Name="Back" Click="BackPressed">
+				<TextBlock Text="{Binding Back}" />
+			</Button>
+			<Button Name="Forward" Click="ForwardPressed">
+				<TextBlock Text="{Binding Forward}" />
+			</Button>
+			<Button Name="Cancel" Click="CancelPressed">
+				<TextBlock Text="{Binding Cancel}" />
+			</Button>
+			<Button Name="OK" Click="OKPressed">
+				<TextBlock Text="{Binding OK}" />
+			</Button>
+		</StackPanel>
+	</Grid>
+</Window>
