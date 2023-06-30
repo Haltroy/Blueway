@@ -7,6 +7,9 @@ namespace Blueway
 {
     public class BackupHistoryItem
     {
+        public BackupHistoryItem()
+        { }
+
         public BackupHistoryItem(string name, BackupSchema schema, DateTime date, BackupStatus status, DateTime plannedDate, TimeSpan reoccurence, string backupDir)
         {
             Name = name;
@@ -19,14 +22,19 @@ namespace Blueway
         }
 
         public string Name { get; set; }
+        public BackupHistoryItem Self => this;
 
         public BackupSchema Schema { get; set; }
 
         public DateTime Date { get; set; }
 
         public BackupStatus Status { get; set; }
+        public bool IsSuccess => Status == BackupStatus.Success;
+        public bool IsOngoing => Status == BackupStatus.OnGoing;
+        public bool IsPlanned => Status == BackupStatus.Planned;
+        public bool IsFailure => Status == BackupStatus.Failure;
 
-        public DateTime PlannedDate { get; set; }
+        public DateTime? PlannedDate { get; set; }
         public TimeSpan Reoccurence { get; set; }
 
         public string BackupDir { get; set; }
@@ -154,6 +162,8 @@ namespace Blueway
         /// <param name="target">Path to backup stuff to.</param>
         /// <returns>see <see cref="MultiheadDetails"/> class properties.</returns>
         public abstract MultiheadDetails Before(string target, int threadCount);
+
+        public BackupActionType GetBackupActionType { get; }
     }
 
     /// <summary>

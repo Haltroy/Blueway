@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blueway.Views
 {
@@ -10,11 +10,27 @@ namespace Blueway.Views
         public BackupCustomize()
         {
             InitializeComponent();
+            Initialized += (s, e) => LoadActions();
         }
 
         private AUC GoBackTo;
+        private BackupSchema Schema { get; set; } = new(new());
 
         public override AUC? ReturnTo(MainWindow.Buttons buttons) => GoBackTo;
+
+        internal BackupCustomize LoadSchema(BackupSchema backupSchema)
+        {
+            for (int i = 0; i < backupSchema.Actions.Count; i++)
+            {
+                ActionList.Children.Add(GenerateFromAction(backupSchema.Actions[i], backupSchema.Actions[i].GetBackupActionType));
+            }
+            return this;
+        }
+
+        internal BackupCustomize LoadSchema(BackupHistoryItem item)
+        {
+            return LoadSchema(item);
+        }
 
         public BackupCustomize GoBackToAUC(AUC auc)
         {
@@ -22,30 +38,47 @@ namespace Blueway.Views
             return this;
         }
 
+        private Button GenerateFromAction(BackupAction action, BackupActionType type)
+        {
+            // TODO
+            throw new System.NotImplementedException();
+        }
+
         private BackupCustomize LoadActions()
         {
-            MenuFlyout mfo = new();
-            AddNew.Flyout = mfo;
-
-            var ass = System.Reflection.Assembly.GetExecutingAssembly();
-            //var types = ass.GetTypes();
-
-            var type = typeof(BackupAction);
-            var types = System.AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p)).ToArray();
-
-            for (int i = 0; i < types.Length; i++)
+            if (Settings != null)
             {
-                // TODO: Get properties, generate object from type and generate appropriate controls that will change them and add them to schema.
-            }
+                MenuFlyout mfo = new();
+                AddNew.Flyout = mfo;
 
+                for (int i = 0; i < Settings.BackupActionTypes.Length; i++)
+                {
+                    MenuItem item = new() { Header = Settings.BackupActionTypes[i].Name };
+                    mfo.Items.Add(item);
+                    item.Click += (s, e) =>
+                    {
+                        var action = Settings.BackupActionTypes[i].GenerateAction();
+                        Schema.Actions.Add(action);
+                    };
+                }
+            }
             return this;
         }
 
-        private void BrowseFolder(object? s, RoutedEventArgs e)
+        private async void BrowseFolder(object? s, RoutedEventArgs e)
         {
-            // TODO
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (MainWindow != null && MainWindow.StorageProvider.CanPickFolder)
+                {
+                    // TODO: Add translations
+                    var files = await MainWindow.StorageProvider.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions() { AllowMultiple = false, Title = "Open a folder..." });
+                    if (files != null && files.Count > 0)
+                    {
+                        BackupTo.Text = files[0].Path.AbsolutePath;
+                    }
+                }
+            }, Avalonia.Threading.DispatcherPriority.Input);
         }
 
         private void OpenFlyout(object? s, RoutedEventArgs e)

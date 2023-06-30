@@ -21,7 +21,15 @@ namespace Blueway.Views
             InitializeComponent();
         }
 
-        private BackupProcess LoadSchema(BackupSchema schema)
+        internal BackupProcess ApplyFromFolder(string filename)
+        {
+            // TODO
+            return this;
+        }
+
+        internal BackupProcess LoadSchema(BackupHistoryItem item) => LoadSchema(item.Schema);
+
+        internal BackupProcess LoadSchema(BackupSchema schema)
         {
             schema.OnProgressChange += (s, p) =>
             {

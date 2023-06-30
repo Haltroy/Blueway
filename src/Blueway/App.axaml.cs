@@ -25,7 +25,7 @@ public partial class App : Application
             {
                 DataContext = new MainWindowViewModel(),
             }.ShowTrayIcon().AsBackground(desktop.Args.Contains("--background") || desktop.Args.Contains("--bg"));
-            desktop.Exit += (s, e) => { if (desktop.MainWindow is MainWindow mw && mw.DataContext is ViewModelBase vmb) { vmb.Settings.Save(); } };
+            desktop.Exit += (s, e) => { if (desktop.MainWindow is MainWindow mw && mw.DataContext is ViewModelBase vmb) { vmb.Settings.SaveConfig().SaveHistory(); } };
         }
 
         base.OnFrameworkInitializationCompleted();

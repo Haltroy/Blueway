@@ -21,12 +21,12 @@ public partial class MainWindow : Window
     public MainWindow ShowTrayIcon()
     {
         TrayIcon tray = new();
-        tray.Icon = this.Icon;
+        tray.Icon = Icon;
         tray.Clicked += (s, e) => { if (IsVisible) { Hide(); } else { Show(); } };
 
         NativeMenu menu = new();
 
-        // TODO: Add more and add translations
+        // TODO: Add translations
 
         NativeMenuItem showMW = new() { Header = "Show" };
         showMW.Click += (s, e) => Show();
@@ -46,6 +46,10 @@ public partial class MainWindow : Window
         showSettings.Click += (s, e) => { Show(); OpenSettings(s, new Avalonia.Interactivity.RoutedEventArgs()); };
         menu.Items.Add(showSettings);
 
+        NativeMenuItem showAbout = new() { Header = "About" };
+        showAbout.Click += (s, e) => { Show(); OpenAbout(s, new Avalonia.Interactivity.RoutedEventArgs()); };
+        menu.Items.Add(showAbout);
+
         menu.Items.Add(new NativeMenuItemSeparator());
 
         NativeMenuItem exit = new() { Header = "Exit" };
@@ -55,7 +59,7 @@ public partial class MainWindow : Window
             tray.Dispose();
             allowClose = true;
             Close();
-            if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            if (Avalonia.Application.Current != null && Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
                 lifetime.TryShutdown(0);
             }
@@ -198,7 +202,9 @@ public partial class MainWindow : Window
         });
     }
 
-    private void ShowAbout(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void ShowAbout(object? sender, Avalonia.Input.PointerPressedEventArgs e) => OpenAbout(sender, e);
+
+    private void OpenAbout(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         SwitchTo(new About());
     }

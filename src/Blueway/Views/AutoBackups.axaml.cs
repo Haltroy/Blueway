@@ -9,16 +9,33 @@ namespace Blueway.Views
             InitializeComponent();
         }
 
-        public AutoBackups GenAutoBackups(Settings settings)
+        private void OnItemClick(object? s, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            // TODO
-            throw new System.NotImplementedException();
+            if (s is Button button && button.Tag is BackupHistoryItem item && MainWindow != null)
+            {
+                switch (item.Status)
+                {
+                    case BackupStatus.OnGoing:
+                        MainWindow.SwitchTo(new BackupProcess().LoadSchema(item));
+                        break;
+
+                    case BackupStatus.Success:
+                    case BackupStatus.Failure:
+                    case BackupStatus.Planned:
+                    default:
+                        MainWindow.SwitchTo(new BackupCustomize().LoadSchema(item));
+                        break;
+                }
+            }
         }
 
-        private StackPanel GenPanel(BackupHistoryItem item)
+        private void OnItemDeleteClick(object? s, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            // TODO
-            throw new System.NotImplementedException();
+            if (s is Button button && button.Tag is BackupHistoryItem item && MainWindow != null && Settings != null)
+            {
+                Settings.History.Remove(item);
+                MainWindow.RefreshTheme();
+            }
         }
 
         public override MainWindow.Buttons DisplayButtons => MainWindow.Buttons.Back;

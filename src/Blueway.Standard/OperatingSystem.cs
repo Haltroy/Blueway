@@ -23,7 +23,6 @@ namespace Blueway
             /// - %N% - Name of the application <para />
             /// - %A% - Author of the application <para />
             /// - %V% - Version of the application <para />
-            /// - %V% - Version of the application <para />
             /// </summary>
             public abstract string PackageManagerCommand { get; }
 
@@ -59,7 +58,7 @@ namespace Blueway
         {
             public override string Name => "Windows";
 
-            public override string PackageManagerCommand => ""; // TODO: execute batch script for regedit
+            public override string PackageManagerCommand => ""; // TODO: execute batch script for regedit (cmd.exe /C [command-here])
 
             public override bool PackageManagerAllowsMultiple => false;
 
@@ -152,7 +151,7 @@ namespace Blueway
         /// <summary>
         /// Main class for distros like Debian, RedHat etc.
         /// <para />
-        /// NOTE: All other distros that are based on these (such as Manjaro based on <see cref="Arch"/>) should use the distro they based on. Example: Garuda should use <see cref="Arch"/>. Mostly picked by command availability. Also, the distros that use source-based package management should use this class (<seealso cref="Linux"/>) instead (or fall back to here if the package managers did not work).
+        /// NOTE: All other distros that are based on these (such as Manjaro based on <see cref="Arch"/>) should use the distro they based on. Example: Garuda should use <see cref="Arch"/>. Mostly picked by command availability. Also, the distros that use source-based package management should use this class (<seealso cref="Linux"/>) instead (or fall back to here if the package managers do not work).
         /// </summary>
         public class Linux : Unix
         {
