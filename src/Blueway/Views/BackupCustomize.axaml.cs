@@ -13,7 +13,7 @@ namespace Blueway.Views
             Initialized += (s, e) => LoadActions();
         }
 
-        private AUC GoBackTo;
+        private AUC? GoBackTo;
         private BackupSchema Schema { get; set; } = new(new());
 
         public override AUC? ReturnTo(MainWindow.Buttons buttons) => GoBackTo;

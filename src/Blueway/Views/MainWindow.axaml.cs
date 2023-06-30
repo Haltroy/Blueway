@@ -9,10 +9,10 @@ namespace Blueway.Views;
 
 public partial class MainWindow : Window
 {
-    private Subject<bool> BackAvailable = new Subject<bool>();
-    private Subject<bool> ForwardAvailable = new Subject<bool>();
-    private Subject<bool> CancelAvailable = new Subject<bool>();
-    private Subject<bool> OKAvailable = new Subject<bool>();
+    private readonly Subject<bool> BackAvailable = new();
+    private readonly Subject<bool> ForwardAvailable = new();
+    private readonly Subject<bool> CancelAvailable = new();
+    private readonly Subject<bool> OKAvailable = new();
 
     public Home HomeScreen;
 
@@ -20,8 +20,10 @@ public partial class MainWindow : Window
 
     public MainWindow ShowTrayIcon()
     {
-        TrayIcon tray = new();
-        tray.Icon = Icon;
+        TrayIcon tray = new()
+        {
+            Icon = Icon
+        };
         tray.Clicked += (s, e) => { if (IsVisible) { Hide(); } else { Show(); } };
 
         NativeMenu menu = new();
@@ -147,14 +149,8 @@ public partial class MainWindow : Window
 
     public void SwitchTo(AUC? uc = null)
     {
-        if (HomeScreen is null)
-        {
-            HomeScreen = new Home();
-        }
-        if (uc is null)
-        {
-            uc = HomeScreen;
-        }
+        HomeScreen ??= new Home();
+        uc ??= HomeScreen;
 
         // TODO: Get page titles from languages
         PageTitle.Text = uc.Title;
@@ -248,12 +244,11 @@ public partial class MainWindow : Window
     private void UpdateButtons()
     {
         BackAvailable.OnNext(
-            (OK.IsVisible || Cancel.IsVisible) ? ContentCarousel.SelectedIndex > 0 : false
+            (OK.IsVisible || Cancel.IsVisible) && ContentCarousel.SelectedIndex > 0
         );
         ForwardAvailable.OnNext(
             (OK.IsVisible || Cancel.IsVisible)
-                ? ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount
-                : false
+&& ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount
         );
     }
 

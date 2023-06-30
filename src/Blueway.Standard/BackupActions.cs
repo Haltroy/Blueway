@@ -3,8 +3,6 @@
 /// </summary>
 namespace Blueway.BackupActions
 {
-
-
     public class SyncInfo
     {
         // TODO
@@ -78,7 +76,11 @@ namespace Blueway.BackupActions
             Path = path ?? throw new System.ArgumentNullException(nameof(path));
             Content = content ?? throw new System.ArgumentNullException(nameof(content));
         }
-        public FileInfo(string path) : this(path, "") { }
+
+        public FileInfo(string path) : this(path, "")
+        {
+        }
+
         public string Path { get; set; }
         public string Content { get; set; }
     }
@@ -139,4 +141,3 @@ namespace Blueway.BackupActions
         }
     }
 }
-

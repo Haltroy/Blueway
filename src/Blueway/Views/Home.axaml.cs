@@ -28,10 +28,7 @@ namespace Blueway.Views
 
         private void CustomBackup(object? s, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            if (MainWindow != null)
-            {
-                MainWindow.SwitchTo(new BackupCustomize());
-            }
+            MainWindow?.SwitchTo(new BackupCustomize());
         }
 
         private async void ApplyBackup(object? s, Avalonia.Interactivity.RoutedEventArgs e)

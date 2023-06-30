@@ -356,7 +356,6 @@ namespace Blueway
                 }
                 catch (Exception) { continue; }
             }
-            themes = null;
             return this;
         }
 

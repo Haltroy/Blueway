@@ -61,8 +61,7 @@ namespace Blueway.Views
                 Themes.SelectionChanged += (s, e) =>
                 {
                     settings.CurrentTheme = Themes.Items[Themes.SelectedIndex] is ComboBoxItem cbi && cbi.Tag is Theme theme ? theme : settings.CurrentTheme;
-                    if (MainWindow != null)
-                    { MainWindow.RefreshTheme(); }
+                    MainWindow?.RefreshTheme();
                 };
 
                 LoadAllSources(settings);
@@ -105,10 +104,14 @@ namespace Blueway.Views
             StackPanel titlePanel = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
             detailsPanel.Children.Add(titlePanel);
 
-            Image sourceLogo = new() { Width = 16, Height = 16 };
-            sourceLogo.Source = System.IO.File.Exists(source.IconPath)
+            Image sourceLogo = new()
+            {
+                Width = 16,
+                Height = 16,
+                Source = System.IO.File.Exists(source.IconPath)
                 ? new Bitmap(new System.IO.FileStream(source.IconPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
-                : (Avalonia.Media.IImage)new Bitmap(AssetLoader.Open(new Uri("/Assets/blueway-logo.png")));
+                : (Avalonia.Media.IImage)new Bitmap(AssetLoader.Open(new Uri("/Assets/blueway-logo.png")))
+            };
 
             titlePanel.Children.Add(sourceLogo);
 

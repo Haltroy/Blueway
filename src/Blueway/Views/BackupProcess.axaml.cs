@@ -1,10 +1,12 @@
+// Ignore Spelling: auc
+
 using Avalonia.Controls;
 
 namespace Blueway.Views
 {
     public partial class BackupProcess : AUC
     {
-        private AUC GoBackTo;
+        private AUC? GoBackTo;
 
         public override AUC? ReturnTo(MainWindow.Buttons buttons) => GoBackTo;
 
