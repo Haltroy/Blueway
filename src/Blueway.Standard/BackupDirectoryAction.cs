@@ -12,6 +12,7 @@ namespace Blueway.BackupActions
 
         public override FostrianNode ExportAction(BackupAction action)
         {
+            // TODO
             throw new System.NotImplementedException();
         }
 
@@ -20,12 +21,13 @@ namespace Blueway.BackupActions
         public override BackupActionProperty[] GetProperties()
         {
             BackupActionProperty[] bap = new BackupActionProperty[10];
-            // TODo
+            // TODO
             return bap;
         }
 
         public override BackupAction ImportAction(FostrianNode node)
         {
+            // TODO
             throw new System.NotImplementedException();
         }
     }

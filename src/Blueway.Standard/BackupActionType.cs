@@ -63,11 +63,20 @@ namespace Blueway
             ValueType = valueType;
         }
 
+        public bool MultiPick { get; }
+        public string DialogTitle { get; }
+        public string Filters { get; }
         public string Name { get; }
         public string Description { get; }
         public object DefaultValue { get; }
+        public int ByteSize { get; }
+        public decimal Increment { get; }
+        public decimal Minimum { get; }
+        public decimal Maximum { get; }
         public BackupActionPropertyValueType ValueType { get; }
         public string[] Options { get; }
+
+        public void PerformChange(BackupAction backupAction, object newVal) => OnChange(backupAction, newVal);
 
         public delegate void OnChangeDelegate(BackupAction backupAction, object newVal);
 
@@ -81,12 +90,11 @@ namespace Blueway
         Password,
         RandomBytes,
         Number,
-        SignedNumber,
         Date,
         Time,
         Options,
-        File,
+        OpenFile,
+        SaveFile,
         Folder,
-        Enumerator,
     }
 }
