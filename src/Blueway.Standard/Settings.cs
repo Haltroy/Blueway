@@ -193,7 +193,13 @@ namespace Blueway
             {
                 Directory.CreateDirectory(UserFiles);
             }
-            BackupActionTypes = new BackupActionType[] { new BackupActions.BackupDirectoryActionType() }; // TODO: add defaults
+            BackupActionTypes = new BackupActionType[]
+            {
+#if DEBUG
+                new BackupActions.BackupTestActionType(),
+#endif
+                new BackupActions.BackupDirectoryActionType()
+            }; // TODO: add defaults
         }
 
         public Settings AutoLoadConfig()
@@ -235,7 +241,7 @@ namespace Blueway
                     {
                         if (string.Equals(BackupActionTypes[si].Name, action.Name, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            actionNode.Add(BackupActionTypes[si].ExportAction(action));
+                            BackupActionTypes[si].ExportAction(actionNode, action);
                             break;
                         }
                     }

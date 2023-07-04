@@ -41,7 +41,7 @@ namespace Blueway
         /// </summary>
         /// <param name="action">Action to read. This will be always your custom action class.</param>
         /// <returns>A Fostrian node that has enough information to recreate the action.</returns>
-        public abstract Fostrian.FostrianNode ExportAction(BackupAction action);
+        public abstract void ExportAction(Fostrian.FostrianNode node, BackupAction action);
 
         /// <summary>
         /// Imports an action from a Fostrian node.
@@ -63,18 +63,18 @@ namespace Blueway
             ValueType = valueType;
         }
 
-        public bool MultiPick { get; }
-        public string DialogTitle { get; }
-        public string Filters { get; }
-        public string Name { get; }
-        public string Description { get; }
-        public object DefaultValue { get; }
-        public int ByteSize { get; }
-        public decimal Increment { get; }
-        public decimal Minimum { get; }
-        public decimal Maximum { get; }
-        public BackupActionPropertyValueType ValueType { get; }
-        public string[] Options { get; }
+        public bool MultiPick { get; set; }
+        public string DialogTitle { get; set; }
+        public string Filters { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public object DefaultValue { get; set; }
+        public int ByteSize { get; set; }
+        public decimal Increment { get; set; }
+        public decimal Minimum { get; set; }
+        public decimal Maximum { get; set; }
+        public BackupActionPropertyValueType ValueType { get; set; }
+        public string[] Options { get; set; }
 
         public void PerformChange(BackupAction backupAction, object newVal) => OnChange(backupAction, newVal);
 

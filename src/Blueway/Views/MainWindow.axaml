@@ -72,13 +72,13 @@ TransparencyLevelHint="{Binding TransparencyLevel}">
 						<Setter Property="Background" Value="{Binding BackColor2}" />
 						<Setter Property="Foreground" Value="{Binding ForeColor}" />
 					</Style>
-					<Style Selector="TextBox Border#PART_BorderElement">
+					<Style Selector="TextBox[IsReadOnly=True] Border#PART_BorderElement">
 						<Setter Property="IsVisible" Value="False" />
 					</Style>
-					<Style Selector="TextBox:pointerover Border#PART_BorderElement">
+					<Style Selector="TextBox[IsReadOnly=True]:pointerover Border#PART_BorderElement">
 						<Setter Property="IsVisible" Value="False" />
 					</Style>
-					<Style Selector="TextBox:focus Border#PART_BorderElement">
+					<Style Selector="TextBox[IsReadOnly=True]:focus Border#PART_BorderElement">
 						<Setter Property="IsVisible" Value="False" />
 					</Style>
 					<Style Selector="ToggleSwitch:unchecked > Grid > Grid > Border#OuterBorder">

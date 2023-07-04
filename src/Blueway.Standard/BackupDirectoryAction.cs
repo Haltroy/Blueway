@@ -10,7 +10,7 @@ namespace Blueway.BackupActions
     {
         public override string Name => "Files";
 
-        public override FostrianNode ExportAction(BackupAction action)
+        public override void ExportAction(FostrianNode node, BackupAction action)
         {
             // TODO
             throw new System.NotImplementedException();

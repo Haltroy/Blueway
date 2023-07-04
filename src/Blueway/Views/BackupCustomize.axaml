@@ -38,6 +38,10 @@
 				<Separator />
 				<StackPanel Orientation="Vertical" Spacing="5" Name="ActionList" />
 			</StackPanel>
+
+			<Button HorizontalAlignment="Right" Click="StartBackup" VerticalAlignment="Bottom">
+				<TextBlock Text="Start" />
+			</Button>
 		</StackPanel>
 	</StackPanel>
 </UserControl>
