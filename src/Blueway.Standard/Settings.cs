@@ -10,15 +10,6 @@ using LibFoster;
 
 namespace Blueway
 {
-    public static class Main
-    {
-        public static Settings Settings =>
-            new Settings()
-            .AutoLoadConfig()
-            .AutoLoadExtensions()
-            .AutoLoadHistory();
-    }
-
     public class Settings
     {
         public static bool GlobalEnableExtensions => true;
@@ -61,7 +52,7 @@ namespace Blueway
 
         public BackupHistoryItem GetLatestOrEmptyBackup()
         {
-            return GetLatestBackup() ?? new BackupHistoryItem("", new BackupSchema(new List<BackupAction>()), DateTime.Now, BackupStatus.Planned, DateTime.Now, new TimeSpan(0), Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            return GetLatestBackup() ?? new BackupHistoryItem();
         }
 
         public BackupHistoryItem[] AutoBackups => GetAutoBackups();
@@ -71,7 +62,7 @@ namespace Blueway
             List<BackupHistoryItem> items = new List<BackupHistoryItem>();
             for (int i = 0; i < History.Count; i++)
             {
-                if (History[i].PlannedDate != null || History[i].Reoccurence.TotalMilliseconds > 0)
+                if (History[i].Schedule.IsNotEmpty)
                 {
                     items.Add(History[i]);
                 }
@@ -108,7 +99,8 @@ namespace Blueway
 
         private BackupHistoryItem ParseHistoryNode(Fostrian.FostrianNode node)
         {
-            BackupHistoryItem backup = new BackupHistoryItem() { Name = node.DataAsString };
+            BackupHistoryItem backup = new BackupHistoryItem();
+            backup.Schema.Name = node.DataAsString;
             for (int i = 0; i < node.Size; i++)
             {
                 try
@@ -128,20 +120,8 @@ namespace Blueway
                             backup.Date = DateTime.FromBinary(node[i].DataAsInt64);
                             break;
 
-                        case "planned":
-                            // that C# 7.3 warning fucked me here.
-                            if (node[i].DataAsInt64 > 0)
-                            {
-                                backup.PlannedDate = DateTime.FromBinary(node[i].DataAsInt64);
-                            }
-                            else
-                            {
-                                backup.PlannedDate = null;
-                            }
-                            break;
-
-                        case "reoccurence":
-                            backup.Reoccurence = TimeSpan.FromMilliseconds(node[i].DataAsDouble);
+                        case "schedule":
+                            backup.Schema.Schedule = ScheduleInfo.FromBinary(node[i].DataAsInt64);
                             break;
 
                         case "schema":
@@ -230,8 +210,7 @@ namespace Blueway
                 node.Add(new Fostrian.FostrianNode(item.BackupDir, "dir"));
                 node.Add(new Fostrian.FostrianNode((short)item.Status, "status"));
                 node.Add(new Fostrian.FostrianNode(item.Date.ToBinary(), "date"));
-                node.Add(new Fostrian.FostrianNode(item.PlannedDate.HasValue ? item.PlannedDate.Value.ToBinary() : 0, "planned"));
-                node.Add(new Fostrian.FostrianNode(item.Reoccurence.TotalMilliseconds, "reoccurence"));
+                node.Add(new Fostrian.FostrianNode(item.Schedule.ToBinary(), "schedule"));
                 var schema = node.Add(new Fostrian.FostrianNode(true, "schema"));
                 for (int ai = 0; ai < item.Schema.Actions.Count; ai++)
                 {

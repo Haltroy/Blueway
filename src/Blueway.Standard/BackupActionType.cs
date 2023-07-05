@@ -53,11 +53,12 @@ namespace Blueway
 
     public class BackupActionProperty
     {
-        public BackupActionProperty(string name, string description, BackupActionPropertyValueType valueType, OnChangeDelegate on_change, object defaultValue = null, string[] options = null)
+        public BackupActionProperty(string name, string description, BackupActionPropertyValueType valueType, OnChangeDelegate on_change, GetValueDelegate getValue, object defaultValue = null, string[] options = null)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? throw new ArgumentNullException(nameof(description));
             OnChange += on_change;
+            GetValue += getValue;
             Options = options ?? new string[0];
             DefaultValue = defaultValue;
             ValueType = valueType;
@@ -75,6 +76,12 @@ namespace Blueway
         public decimal Maximum { get; set; }
         public BackupActionPropertyValueType ValueType { get; set; }
         public string[] Options { get; set; }
+
+        public object PerformGetValue(BackupAction action) => GetValue is null ? DefaultValue : GetValue(action);
+
+        public delegate object GetValueDelegate(BackupAction action);
+
+        public event GetValueDelegate GetValue;
 
         public void PerformChange(BackupAction backupAction, object newVal) => OnChange(backupAction, newVal);
 

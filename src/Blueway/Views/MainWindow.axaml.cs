@@ -57,6 +57,11 @@ public partial class MainWindow : Window
         NativeMenuItem exit = new() { Header = "Exit" };
         exit.Click += (s, e) =>
         {
+            if (DataContext is ViewModels.ViewModelBase vmb)
+            {
+                vmb.Settings.SaveConfig();
+                vmb.Settings.SaveHistory();
+            }
             tray.IsVisible = false;
             tray.Dispose();
             allowClose = true;
@@ -88,6 +93,7 @@ public partial class MainWindow : Window
         {
             if (theme is not null) { vmb.Settings.CurrentTheme = theme; }
             DataContext = null;
+            InvalidateVisual();
             DataContext = vmb;
             InvalidateVisual();
             for (int i = 0; i < ContentCarousel.Items.Count; i++)
@@ -95,6 +101,7 @@ public partial class MainWindow : Window
                 if (ContentCarousel.Items[i] is Control control)
                 {
                     control.DataContext = null;
+                    InvalidateVisual();
                     control.DataContext = vmb;
                     control.InvalidateVisual();
                 }

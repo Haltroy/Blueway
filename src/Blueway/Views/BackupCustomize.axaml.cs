@@ -1,8 +1,12 @@
+// Ignore Spelling: auc
+
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using MessageBox.Avalonia.Models;
+using MsBox.Avalonia;
 using System;
+using System.Collections.Generic;
 
 namespace Blueway.Views
 {
@@ -53,13 +57,78 @@ namespace Blueway.Views
             StackPanel btPanelOptions = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
             btPanel.Children.Add(btPanelOptions);
             Button moveUp = new() { Content = new TextBlock() { Text = "Move Up" } };
-            moveUp.Click += (s, e) => { };
+            moveUp.Click += (s, e) =>
+            {
+                if (Schema.Actions.Count <= 1 || ActionList.Children.Count <= 1) { return; }
+
+                int index = Schema.Actions.IndexOf(action);
+                if (index > 0)
+                {
+                    Schema.Actions.RemoveAt(index);
+                    Schema.Actions.Insert(index - 1, action);
+                }
+
+                index = ActionList.Children.IndexOf(border);
+                if (index > 0)
+                {
+                    ActionList.Children.RemoveAt(index);
+                    ActionList.Children.Insert(index - 1, border);
+                }
+            };
             btPanelOptions.Children.Add(moveUp);
             Button moveDown = new() { Content = new TextBlock() { Text = "Move Down" } };
-            moveDown.Click += (s, e) => { };
+            moveDown.Click += (s, e) =>
+            {
+                if (Schema.Actions.Count <= 1 || ActionList.Children.Count <= 1) { return; }
+
+                int index = Schema.Actions.IndexOf(action);
+                if (index < Schema.Actions.Count)
+                {
+                    Schema.Actions.RemoveAt(index);
+                    Schema.Actions.Insert(index + 1, action);
+                }
+
+                index = ActionList.Children.IndexOf(border);
+                if (index < ActionList.Children.Count)
+                {
+                    ActionList.Children.RemoveAt(index);
+                    ActionList.Children.Insert(index + 1, border);
+                }
+            };
             btPanelOptions.Children.Add(moveDown);
             Button delete = new() { Content = new TextBlock() { Text = "Delete" } };
-            delete.Click += (s, e) => { };
+            delete.Click += async (s, e) =>
+            {
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var msgbox = MessageBoxManager.GetMessageBoxCustom(new MsBox.Avalonia.Dto.MessageBoxCustomParams()
+                    {
+                        CanResize = false,
+                        ShowInCenter = true,
+                        ContentTitle = "Blueway",
+                        ContentHeader = "Do you really want to delete this item?",
+                        ContentMessage = action.Name,
+                        Icon = MsBox.Avalonia.Enums.Icon.Question,
+                        WindowIcon = MainWindow?.Icon,
+                        ButtonDefinitions = new ButtonDefinition[]
+                        {
+                            new ButtonDefinition() { IsDefault = true, Name = "Yes"},
+                            new ButtonDefinition() { IsCancel = true, Name = "No"},
+                        }
+                    });
+
+                    string result = await msgbox.ShowWindowDialogAsync(MainWindow);
+                    if (string.Equals(result, "Yes"))
+                    {
+                        try
+                        {
+                            Schema.Actions.Remove(action);
+                            ActionList.Children.Remove(border);
+                        }
+                        catch (Exception) { }
+                    }
+                });
+            };
             btPanelOptions.Children.Add(delete);
 
             // SHOW MORE
@@ -96,7 +165,7 @@ namespace Blueway.Views
                             StackPanel spBool1 = new();
                             StackPanel spBool = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spBool.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-                            ToggleSwitch swBool = new() { IsChecked = prop.DefaultValue is bool b && b };
+                            ToggleSwitch swBool = new() { IsChecked = prop.PerformGetValue(action) is bool b && b };
                             swBool.IsCheckedChanged += (s, e) => prop.PerformChange(action, swBool.IsChecked);
                             spBool.Children.Add(swBool);
                             spBool1.Children.Add(spBool);
@@ -110,7 +179,7 @@ namespace Blueway.Views
                             DockPanel spText = new() { LastChildFill = true };
                             spText.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Margin = new Avalonia.Thickness(0, 0, 5, 0) });
                             DockPanel.SetDock(spText.Children[0], Dock.Left);
-                            TextBox tbText = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.DefaultValue is string str ? str : (prop.DefaultValue != null ? prop.DefaultValue.ToString() : string.Empty) };
+                            TextBox tbText = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.PerformGetValue(action) is string str ? str : (prop.PerformGetValue(action) != null ? prop.PerformGetValue(action).ToString() : string.Empty) };
                             tbText.PropertyChanged += (s, e) => { if (e.Property == TextBlock.TextProperty) { prop.PerformChange(action, tbText.Text); } };
                             spText.Children.Add(tbText);
                             spText1.Children.Add(spText);
@@ -127,7 +196,7 @@ namespace Blueway.Views
                             {
                                 PasswordChar = '#',
                                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-                                Text = prop.DefaultValue is string pwd ? pwd : (prop.DefaultValue != null ? prop.DefaultValue.ToString() : string.Empty)
+                                Text = prop.PerformGetValue(action) is string pwd ? pwd : (prop.PerformGetValue(action) != null ? prop.PerformGetValue(action).ToString() : string.Empty)
                             };
                             tbPassword.PropertyChanged += (s, e) => { if (e.Property == TextBlock.TextProperty) { prop.PerformChange(action, tbPassword.Text); } };
 
@@ -145,7 +214,7 @@ namespace Blueway.Views
                             StackPanel spRandom1 = new();
                             StackPanel spRandom = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spRandom.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-                            TextBlock tbInfo = new() { VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Text = BitConverter.ToString(prop.DefaultValue is byte[] ba ? ba : Array.Empty<byte>()) };
+                            TextBlock tbInfo = new() { VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Text = BitConverter.ToString(prop.PerformGetValue(action) is byte[] ba ? ba : Array.Empty<byte>()) };
                             Button btGen = new() { Content = new TextBlock() { Text = "Generate" } };
                             btGen.Click += (s, e) =>
                             {
@@ -168,7 +237,13 @@ namespace Blueway.Views
                             StackPanel spNumber1 = new();
                             StackPanel spNumber = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spNumber.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-                            NumericUpDown nudNumber = new() { Maximum = prop.Maximum, Minimum = prop.Minimum, Increment = prop.Increment, Value = prop.DefaultValue is decimal dec ? dec : 0 };
+                            NumericUpDown nudNumber = new()
+                            {
+                                Maximum = prop.Maximum,
+                                Minimum = prop.Minimum,
+                                Increment = prop.Increment,
+                                Value = Convert.ToDecimal(prop.PerformGetValue(action))
+                            };
                             nudNumber.ValueChanged += (s, e) => prop.PerformChange(action, nudNumber.Value);
                             spNumber.Children.Add(nudNumber);
                             spNumber1.Children.Add(spNumber);
@@ -180,7 +255,7 @@ namespace Blueway.Views
                             StackPanel spDate1 = new();
                             StackPanel spDate = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spDate.Children.Add(new TextBlock() { Text = prop.Name + ":" });
-                            DatePicker dpDate = new() { SelectedDate = new DateTimeOffset(prop.DefaultValue is DateTime dt ? dt : DateTime.Now) };
+                            DatePicker dpDate = new() { SelectedDate = new DateTimeOffset(prop.PerformGetValue(action) is DateTime dt ? dt : DateTime.Now) };
                             dpDate.SelectedDateChanged += (s, e) => prop.PerformChange(action, dpDate.SelectedDate.HasValue ? dpDate.SelectedDate.Value.DateTime : DateTime.Now);
                             spDate.Children.Add(dpDate);
                             spDate1.Children.Add(spDate);
@@ -192,7 +267,7 @@ namespace Blueway.Views
                             StackPanel spTime1 = new();
                             StackPanel spTime = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spTime.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-                            TimePicker dpTime = new() { SelectedTime = prop.DefaultValue is TimeSpan ts ? ts : TimeSpan.Zero };
+                            TimePicker dpTime = new() { SelectedTime = prop.PerformGetValue(action) is TimeSpan ts ? ts : TimeSpan.Zero };
                             dpTime.SelectedTimeChanged += (s, e) => prop.PerformChange(action, dpTime.SelectedTime ?? TimeSpan.Zero);
                             spTime.Children.Add(dpTime);
                             spTime1.Children.Add(spTime);
@@ -204,11 +279,12 @@ namespace Blueway.Views
                             StackPanel spOptions1 = new();
                             StackPanel spOptions = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
                             spOptions.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-                            ComboBox cbOptions = new() { SelectedIndex = prop.DefaultValue is int opi ? opi : 0 };
+                            ComboBox cbOptions = new();
                             for (int oi = 0; oi < prop.Options.Length; oi++)
                             {
                                 cbOptions.Items.Add(new ComboBoxItem() { Content = new TextBlock() { Text = prop.Options[oi] } });
                             }
+                            cbOptions.SelectedIndex = prop.PerformGetValue(action) is int opi ? opi : 0;
                             cbOptions.SelectionChanged += (s, e) => prop.PerformChange(action, cbOptions.SelectedIndex);
                             spOptions.Children.Add(cbOptions);
                             spOptions1.Children.Add(spOptions);
@@ -221,7 +297,7 @@ namespace Blueway.Views
                             DockPanel spOFile = new() { LastChildFill = true };
                             spOFile.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Margin = new Avalonia.Thickness(0, 0, 5, 0) });
                             DockPanel.SetDock(spOFile.Children[0], Dock.Left);
-                            TextBox tbOFile = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.DefaultValue is string ofile ? ofile : (prop.DefaultValue != null ? prop.DefaultValue.ToString() : string.Empty) };
+                            TextBox tbOFile = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.PerformGetValue(action) is string ofile ? ofile : (prop.PerformGetValue(action) != null ? prop.PerformGetValue(action).ToString() : string.Empty) };
                             tbOFile.PropertyChanged += (s, e) => { if (e.Property == TextBlock.TextProperty) { prop.PerformChange(action, tbOFile.Text); } };
                             Button btOFile = new() { Content = new TextBlock() { Text = "..." }, Margin = new Avalonia.Thickness(5, 0, 0, 0) };
                             DockPanel.SetDock(btOFile, Dock.Right);
@@ -249,6 +325,7 @@ namespace Blueway.Views
                                                 _files[fi] = files[fi].Path.AbsolutePath;
                                             }
                                             prop.PerformChange(action, _files);
+                                            tbOFile.Text = prop.PerformGetValue(action) is string s ? s : string.Empty;
                                         }
                                     }
                                 });
@@ -265,7 +342,7 @@ namespace Blueway.Views
                             DockPanel spSFile = new() { LastChildFill = true };
                             spSFile.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
                             DockPanel.SetDock(spSFile.Children[0], Dock.Left);
-                            TextBox tbSFile = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.DefaultValue is string sfile ? sfile : (prop.DefaultValue != null ? prop.DefaultValue.ToString() : string.Empty), Margin = new Avalonia.Thickness(0, 0, 5, 0) };
+                            TextBox tbSFile = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.PerformGetValue(action) is string sfile ? sfile : (prop.PerformGetValue(action) != null ? prop.PerformGetValue(action).ToString() : string.Empty), Margin = new Avalonia.Thickness(0, 0, 5, 0) };
                             tbSFile.PropertyChanged += (s, e) => { if (e.Property == TextBlock.TextProperty) { prop.PerformChange(action, tbSFile.Text); } };
                             Button btSFile = new() { Content = new TextBlock() { Text = "..." }, Margin = new Avalonia.Thickness(5, 0, 0, 0) };
                             DockPanel.SetDock(btSFile, Dock.Right);
@@ -288,6 +365,7 @@ namespace Blueway.Views
                                         if (files != null)
                                         {
                                             prop.PerformChange(action, files.Path.AbsolutePath);
+                                            tbSFile.Text = prop.PerformGetValue(action) is string s ? s : string.Empty;
                                         }
                                     }
                                 });
@@ -305,7 +383,7 @@ namespace Blueway.Views
                             DockPanel spDir = new() { LastChildFill = true };
                             spDir.Children.Add(new TextBlock() { Text = prop.Name + ":", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, Margin = new Avalonia.Thickness(0, 0, 5, 0) });
                             DockPanel.SetDock(spDir.Children[0], Dock.Left);
-                            TextBox tbDir = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.DefaultValue is string file ? file : (prop.DefaultValue != null ? prop.DefaultValue.ToString() : string.Empty) };
+                            TextBox tbDir = new() { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch, Text = prop.PerformGetValue(action) is string file ? file : (prop.PerformGetValue(action) != null ? prop.PerformGetValue(action).ToString() : string.Empty) };
                             tbDir.PropertyChanged += (s, e) => { if (e.Property == TextBlock.TextProperty) { prop.PerformChange(action, tbDir.Text); } };
                             Button btDir = new() { Content = new TextBlock() { Text = "..." }, Margin = new Avalonia.Thickness(5, 0, 0, 0) };
                             DockPanel.SetDock(btDir, Dock.Right);
@@ -324,6 +402,7 @@ namespace Blueway.Views
                                                 _files[fi] = files[fi].Path.AbsolutePath;
                                             }
                                             prop.PerformChange(action, _files);
+                                            tbDir.Text = prop.PerformGetValue(action) is string s ? s : string.Empty;
                                         }
                                     }
                                 });
@@ -390,17 +469,114 @@ namespace Blueway.Views
             }, Avalonia.Threading.DispatcherPriority.Input);
         }
 
-        public void StartBackup(object? s, RoutedEventArgs e)
+        public async void StartBackup(object? s, RoutedEventArgs e)
         {
-            MainWindow?.SwitchTo(new BackupProcess().LoadSchema(Schema));
+            List<string> errors = new();
+            if (string.IsNullOrWhiteSpace(SchemaName.Text))
+            {
+                errors.Add("MissingBackupName");
+            }
+
+            if (string.IsNullOrWhiteSpace(BackupTo.Text))
+            {
+                errors.Add("MissingBackupTo");
+            }
+
+            if (Schedule.IsChecked is bool b && b)
+            {
+                if (string.IsNullOrWhiteSpace(Occurrence.Text))
+                {
+                    errors.Add("MissingReoccurance");
+                }
+                else
+                {
+                    if (ScheduleInfo.TryParse(Occurrence.Text, out ScheduleInfo si))
+                    {
+                        Schema.Schedule = si;
+                    }
+                    else
+                    {
+                        errors.Add("InvalidReoccurance");
+                    }
+                }
+            }
+
+            if (Schema.Actions.Count <= 0)
+            {
+                errors.Add("NoActions");
+            }
+
+            if (errors.Count > 0)
+            {
+                // TODO: Add translations here
+
+                string errorMessage = $"{Environment.NewLine} - " + string.Join($"{Environment.NewLine} - ", errors.ToArray());
+
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var msgbox = MessageBoxManager.GetMessageBoxCustom(new MsBox.Avalonia.Dto.MessageBoxCustomParams()
+                    {
+                        CanResize = false,
+                        ShowInCenter = true,
+                        ContentTitle = "Blueway",
+                        ContentHeader = "We found some issues in this custom backup. Please fix these to proceed:",
+                        ContentMessage = errorMessage,
+                        Icon = MsBox.Avalonia.Enums.Icon.Warning,
+                        WindowIcon = MainWindow?.Icon,
+                        ButtonDefinitions = new ButtonDefinition[]
+                        {
+                            new ButtonDefinition() { IsDefault = true, Name = "OK"},
+                        }
+                    });
+
+                    await msgbox.ShowWindowDialogAsync(MainWindow);
+                });
+            }
+            else
+            {
+                MainWindow?.SwitchTo(new BackupProcess().LoadSchema(Schema));
+            }
+        }
+
+        private void SchemaName_PropertyChanged(object? s, Avalonia.AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property != TextBlock.TextProperty) { return; }
+            Schema ??= new BackupSchema(new List<BackupAction>());
+            Schema.Name = SchemaName.Text;
+        }
+
+        private void BackupTo_PropertyChanged(object? s, Avalonia.AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property != TextBlock.TextProperty) { return; }
+            Schema ??= new BackupSchema(new List<BackupAction>());
+            Schema.BackupDir = BackupTo.Text;
+        }
+
+        private bool ignoreChange = false;
+
+        private void Occurrence_PropertyChanged(object? s, Avalonia.AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property != TextBlock.TextProperty) { return; }
+            Schema ??= new BackupSchema(new List<BackupAction>());
+            if (!ignoreChange)
+            {
+                ignoreChange = true;
+                Schema.Schedule = ScheduleInfo.Parse(Occurrence.Text);
+                Occurrence.Text = Schema.Schedule.ToString();
+                ignoreChange = false;
+            }
         }
 
         private void OpenFlyout(object? s, RoutedEventArgs e)
         {
-            if (s == null) { return; }
-            if (s is Button btn && btn.Flyout is FlyoutBase flyout)
+            switch (s)
             {
-                flyout.ShowAt(btn);
+                case null:
+                    return;
+
+                case Button btn when btn.Flyout is FlyoutBase flyout:
+                    flyout.ShowAt(btn);
+                    break;
             }
         }
 
