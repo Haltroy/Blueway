@@ -195,7 +195,7 @@ namespace Blueway
         public class Flatpak : Linux
         {
             public override string Name => "Flatpak";
-            public override string PackageManagerCommand => "flatpak install -y %L%"; //TODO
+            public override string PackageManagerCommand => "flatpak install -y %L%";
 
             public override bool PackageManagerAllowsMultiple => true;
 

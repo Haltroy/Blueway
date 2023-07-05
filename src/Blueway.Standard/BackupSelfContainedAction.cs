@@ -1,11 +1,39 @@
-﻿/// <summary>
+﻿using LibFoster;
+
+/// <summary>
 /// Default backup actions.
 /// </summary>
 namespace Blueway.BackupActions
 {
+    // TODO
+    public class BackupSelfContainedActionType : BackupActionType
+    {
+        public override string Name => "SelfContained";
+
+        public override void ExportAction(Fostrian.FostrianNode node, BackupAction action)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction GenerateAction()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupActionProperty[] GetProperties()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction ImportAction(Fostrian.FostrianNode node)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class BackupSelfContainedAction : BackupAction //OperatingSystems.OperatingSystem
     {
-        public override string Name => throw new System.NotImplementedException();
+        public override string Name => "SelfContained";
 
         public override bool WaitForPreviousActions => throw new System.NotImplementedException();
 

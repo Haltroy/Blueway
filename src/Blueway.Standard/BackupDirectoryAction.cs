@@ -8,7 +8,7 @@ namespace Blueway.BackupActions
 {
     public class BackupDirectoryActionType : BackupActionType
     {
-        public override string Name => "Files";
+        public override string Name => "Dir";
 
         public override void ExportAction(FostrianNode node, BackupAction action)
         {

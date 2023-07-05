@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using MessageBox.Avalonia.Models;
+using MsBox.Avalonia;
 using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Blueway.Views
 {
@@ -82,11 +85,33 @@ namespace Blueway.Views
         {
             StackPanel panel = new() { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 5 };
             Button delButton = new();
-            delButton.Click += (s, e) =>
+            delButton.Click += async (s, e) =>
             {
-                // TODO: Ask confirmation
-                source.Delete();
-                SourcesPanel.Children.Remove(panel);
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var msgbox = MessageBoxManager.GetMessageBoxCustom(new MsBox.Avalonia.Dto.MessageBoxCustomParams()
+                    {
+                        CanResize = false,
+                        ShowInCenter = true,
+                        ContentTitle = "Blueway", //TODO: Add translations
+                        ContentHeader = "Do you really want to remove this source?",
+                        ContentMessage = source.Name,
+                        Icon = MsBox.Avalonia.Enums.Icon.Question,
+                        WindowIcon = MainWindow?.Icon,
+                        ButtonDefinitions = new ButtonDefinition[]
+                        {
+                        new ButtonDefinition() { IsDefault = true, Name = "Yes" },
+                        new ButtonDefinition() { IsCancel = true, Name = "No" },
+                        }
+                    });
+
+                    string result = await msgbox.ShowWindowDialogAsync(MainWindow);
+                    if (string.Equals(result, "Yes"))
+                    {
+                        source.Delete();
+                        SourcesPanel.Children.Remove(panel);
+                    }
+                });
             };
             Panel delButtonpanel = new();
             Image delButton_b = new();

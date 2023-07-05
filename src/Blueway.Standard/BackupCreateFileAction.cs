@@ -1,8 +1,36 @@
-﻿/// <summary>
+﻿using LibFoster;
+
+/// <summary>
 /// Default backup actions.
 /// </summary>
 namespace Blueway.BackupActions
 {
+    // TODO
+    public class BackupCreateFileActionType : BackupActionType
+    {
+        public override string Name => "CreateFile";
+
+        public override void ExportAction(Fostrian.FostrianNode node, BackupAction action)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction GenerateAction()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupActionProperty[] GetProperties()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction ImportAction(Fostrian.FostrianNode node)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class FileInfo
     {
         public FileInfo(string path, string content)
@@ -21,7 +49,7 @@ namespace Blueway.BackupActions
 
     public class BackupCreateFileAction : BackupAction //FileInfo
     {
-        public override string Name => throw new System.NotImplementedException();
+        public override string Name => "CreateFile";
 
         public override bool WaitForPreviousActions => throw new System.NotImplementedException();
 

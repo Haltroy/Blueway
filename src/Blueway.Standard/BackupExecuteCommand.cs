@@ -1,8 +1,36 @@
-﻿/// <summary>
+﻿using LibFoster;
+
+/// <summary>
 /// Default backup actions.
 /// </summary>
 namespace Blueway.BackupActions
 {
+    // TODO
+    public class BackupExecuteCommandActionType : BackupActionType
+    {
+        public override string Name => "Exec";
+
+        public override void ExportAction(Fostrian.FostrianNode node, BackupAction action)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction GenerateAction()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupActionProperty[] GetProperties()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction ImportAction(Fostrian.FostrianNode node)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class CommandInfo
     {
         // TODO
@@ -10,7 +38,7 @@ namespace Blueway.BackupActions
 
     public class BackupExecuteCommand : BackupAction //CommandInfo
     {
-        public override string Name => throw new System.NotImplementedException();
+        public override string Name => "Exec";
 
         public override bool WaitForPreviousActions => throw new System.NotImplementedException();
 

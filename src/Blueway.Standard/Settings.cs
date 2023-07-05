@@ -178,8 +178,12 @@ namespace Blueway
 #if DEBUG
                 new BackupActions.BackupTestActionType(),
 #endif
-                new BackupActions.BackupDirectoryActionType()
-            }; // TODO: add defaults
+                new BackupActions.BackupDirectoryActionType(),
+                new BackupActions.BackupCreateFileActionType(),
+                new BackupActions.BackupExecuteCommandActionType(),
+                new BackupActions.BackupSelfContainedActionType(),
+                new BackupActions.BackupUploadDownloadActionType()
+            };
         }
 
         public Settings AutoLoadConfig()
