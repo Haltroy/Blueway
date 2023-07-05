@@ -6,19 +6,32 @@ using static LibFoster.Fostrian;
 
 namespace Blueway.BackupActions
 {
-
     public class BackupDirectoryActionType : BackupActionType
     {
-        public override BackupAction GenerateAction() => new BackupDirectoryAction();
+        public override string Name => "Dir";
 
+        public override void ExportAction(FostrianNode node, BackupAction action)
+        {
+            // TODO
+            throw new System.NotImplementedException();
+        }
+
+        public override BackupAction GenerateAction() => new BackupDirectoryAction();
 
         public override BackupActionProperty[] GetProperties()
         {
             BackupActionProperty[] bap = new BackupActionProperty[10];
-            // TODo
+            // TODO
             return bap;
         }
+
+        public override BackupAction ImportAction(FostrianNode node)
+        {
+            // TODO
+            throw new System.NotImplementedException();
+        }
     }
+
     #region Enums
 
     /// <summary>

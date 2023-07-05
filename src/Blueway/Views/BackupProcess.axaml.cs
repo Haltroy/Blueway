@@ -1,10 +1,12 @@
+// Ignore Spelling: auc
+
 using Avalonia.Controls;
 
 namespace Blueway.Views
 {
     public partial class BackupProcess : AUC
     {
-        private AUC GoBackTo;
+        private AUC? GoBackTo;
 
         public override AUC? ReturnTo(MainWindow.Buttons buttons) => GoBackTo;
 
@@ -21,7 +23,15 @@ namespace Blueway.Views
             InitializeComponent();
         }
 
-        private BackupProcess LoadSchema(BackupSchema schema)
+        internal BackupProcess ApplyFromFolder(string filename)
+        {
+            // TODO
+            return this;
+        }
+
+        internal BackupProcess LoadSchema(BackupHistoryItem item) => LoadSchema(item.Schema);
+
+        internal BackupProcess LoadSchema(BackupSchema schema)
         {
             schema.OnProgressChange += (s, p) =>
             {
@@ -30,7 +40,7 @@ namespace Blueway.Views
                 TotalProgress.IsIndeterminate = p.IsIndeterminate;
                 TotalPerc.Text = p.IsIndeterminate ? "Unknown" /* TODO: Add translation here */ : (p.Percentage + "%");
 
-                // TODO:
+                // NOTE: Check the note below.
                 // TotalLeft.Text =  Get here the value, also translate.
             };
             for (int i = 0; i < schema.Actions.Count; i++)
@@ -76,7 +86,7 @@ namespace Blueway.Views
                 CurrentProgress.IsIndeterminate = p.IsIndeterminate;
                 CurrentPerc.Text = p.IsIndeterminate ? "Unknown" /* TODO: Add translation here */ : (p.Percentage + "%");
 
-                // TODO:
+                // NOTE: I have no idea how should i do the "some time left" thing accurately until someone makes 3h video essay on how Windows is bad at telling users and shows weird method for getting more accurate time left. I also have to store the percentages and their marks to calculate it and making that sounds too time consuming so im not gonna do that for this RC
                 // CurrentLeft.Text =  Get here the value, also translate.
             };
 

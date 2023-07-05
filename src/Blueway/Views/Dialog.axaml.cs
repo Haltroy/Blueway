@@ -5,7 +5,7 @@ namespace Blueway.Views
     public partial class Dialog : AUC
     {
         private MainWindow.Buttons Buttons { get; set; }
-        private AUC Caller { get; set; }
+        private AUC? Caller { get; set; }
 
         public Dialog()
         {

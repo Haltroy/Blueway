@@ -9,7 +9,47 @@
 		<Separator />
 		<Panel Height="10" />
 		<ScrollViewer>
-			<StackPanel Orientation="Vertical" Name="AutoBackupList" Spacing="5" />
+			<StackPanel Orientation="Vertical" Name="AutoBackupList" Spacing="5">
+				<ContentControl Content="{Binding Settings.AUtoBackups}">
+					<ContentControl.ContentTemplate>
+						<DataTemplate>
+							<Button Click="OnItemClick" Tag="{Binding Self}" HorizontalAlignment="Stretch">
+								<DockPanel LastChildFill="True">
+									<StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+										<Button VerticalAlignment="Center" Tag="{Binding Self}" Click="OnItemDeleteClick">
+											<TextBlock Text="Delete" />
+										</Button>
+									</StackPanel>
+									<StackPanel Spacing="5" Orientation="Horizontal">
+										<Panel Width="32" Height="{Binding Width}">
+											<Panel IsVisible="{Binding IsSuccess}">
+												<Image IsVisible="{Binding IsDark}" Source="/Assets/item-success-w.png" />
+												<Image IsVisible="{Binding !IsDark}" Source="/Assets/item-success-b.png" />
+											</Panel>
+											<Panel IsVisible="{Binding IsOngoing}">
+												<Image IsVisible="{Binding IsDark}" Source="/Assets/item-ongoing-w.png" />
+												<Image IsVisible="{Binding !IsDark}" Source="/Assets/item-ongoing-b.png" />
+											</Panel>
+											<Panel IsVisible="{Binding IsPlanned}">
+												<Image IsVisible="{Binding IsDark}" Source="/Assets/item-planned-w.png" />
+												<Image IsVisible="{Binding !IsDark}" Source="/Assets/item-planned-b.png" />
+											</Panel>
+											<Panel IsVisible="{Binding IsFailure}">
+												<Image IsVisible="{Binding IsDark}" Source="/Assets/item-failure-w.png" />
+												<Image IsVisible="{Binding !IsDark}" Source="/Assets/item-failure-b.png" />
+											</Panel>
+										</Panel>
+										<StackPanel Orientation="Vertical">
+											<TextBlock Text="{Binding DateFormatted}" />
+											<TextBlock FontSize="16.5" FontWeight="Bold" Text="{Binding Name}" />
+										</StackPanel>
+									</StackPanel>
+								</DockPanel>
+							</Button>
+						</DataTemplate>
+					</ContentControl.ContentTemplate>
+				</ContentControl>
+			</StackPanel>
 		</ScrollViewer>
 	</StackPanel>
 </UserControl>

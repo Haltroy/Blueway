@@ -15,10 +15,15 @@ internal static class Tools
         var assembly = Assembly.GetExecutingAssembly();
         string resourcePath = name;
 
-        using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-        using (StreamReader reader = new StreamReader(stream))
+        var stream = assembly.GetManifestResourceStream(resourcePath);
+        if (stream != null)
         {
+            using StreamReader reader = new(stream);
             return reader.ReadToEnd();
+        }
+        else
+        {
+            return string.Empty;
         }
     }
 }
