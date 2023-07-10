@@ -32,7 +32,7 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-rc1.1" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-rc1.1" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.0-rc1.1" />
-    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230601001" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230704001" />
     <!-- <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" /> -->
   </ItemGroup>
 
