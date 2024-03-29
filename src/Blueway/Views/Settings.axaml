@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Blueway.ViewModels"
+			 xmlns:bw="using:Blueway.Views"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="550"
+             x:Class="Blueway.Views.Settings">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+
+	<ScrollViewer Margin="5 5 5 5">
+		<StackPanel Orientation="Vertical" Spacing="5">
+			<TextBlock FontSize="25" Text="Settings" />
+			<Separator />
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock VerticalAlignment="Center" Text="Theme:" />
+				<ComboBox Name="Themes" SelectedIndex="0" />
+			</StackPanel>
+			<ToggleSwitch Name="CheckInternet" OnContent="Check Internet connection" OffContent="{Binding $self.OnContent}" />
+			<ToggleSwitch Name="NotifyOnAutoBackup" OnContent="Show notification on auto-backups" OffContent="{Binding $self.OnContent}" />
+			<ToggleSwitch Name="CopySettings" OnContent="Copy settings to backup folder" OffContent="{Binding $self.OnContent}" />
+			<TextBox IsReadOnly="True" Text="Copies the settings to the backup folder alongside with Blueway. The schema should enable &quot;put Blueway to backup folder&quot; option enabled. Works on all systems." TextWrapping="Wrap" />
+			<ToggleSwitch Name="NotifyOnUpdate" OnContent="Show notification on updates" OffContent="{Binding $self.OnContent}" />
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<Panel Width="25" />
+				<ToggleSwitch Name="AutoUpdate" IsEnabled="{Binding NotifyOnUpdate.IsChecked}" OnContent="Auto-update Blueway" OffContent="{Binding $self.OnContent}" />
+			</StackPanel>
+			<ToggleSwitch Name="StartWithOS" OnContent="Start Blueway on OS start" OffContent="{Binding $self.OnContent}" />
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<Panel Width="25" />
+				<ToggleSwitch Name="StartInTray" IsEnabled="{Binding StartWithOS.IsChecked}" OnContent="Start Blueway minimized or in tray if possible" OffContent="{Binding $self.OnContent}" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock VerticalAlignment="Center" Text="Thread Count:" />
+				<Slider Name="ThreadCount" Width="100" LargeChange="1" SmallChange="1" Value="2" Minimum="1" Maximum="10" />
+				<TextBlock VerticalAlignment="Center" Name="ThreadCountText" Text="2" />
+			</StackPanel>
+			<TextBox IsReadOnly="True" Text="Determines how many jobs should be executed at that time. Might speed up backups but might use a lot of resources." TextWrapping="Wrap" />
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<Panel Height="10" />
+				<TextBlock FontSize="25" Text="Sources" />
+				<Button Click="AddNew">
+					<TextBlock Text="Add new..." />
+				</Button>
+				<!-- DO NOT REMOVE THESE BUTTONS DESPITE SERVING NO PURPOSE! -->
+				<!-- THEY ARE REQUIRED FOR THE DELETE BUTTONS TO DISPLAY THE IMAGE PROPERLY -->
+				<Button IsVisible="False" IsEnabled="{Binding IsDark}" Name="IsDark_ShadowButton" />
+				<Button IsVisible="False" IsEnabled="{Binding !IsDark}" Name="IsNotDark_ShadowButton" />
+				<!-- DO NOT DELETE THE BUTTONS ABOVE -->
+			</StackPanel>
+			<Separator />
+			<StackPanel Name="SourcesPanel" Orientation="Vertical" Spacing="5" />
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>
