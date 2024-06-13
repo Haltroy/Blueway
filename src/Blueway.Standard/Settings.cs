@@ -3,20 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using LibFoster;
 
 namespace Blueway
 {
-    public static class Main
-    {
-        public static Settings Settings =>
-            new Settings()
-            .AutoLoadConfig()
-            .AutoLoadExtensions();
-    }
-
     public class Settings
     {
         public static bool GlobalEnableExtensions => true;
@@ -59,6 +52,108 @@ namespace Blueway
 
         public BackupHistoryItem GetLatestOrEmptyBackup()
         {
+            return GetLatestBackup() ?? new BackupHistoryItem();
+        }
+
+        public BackupHistoryItem[] AutoBackups => GetAutoBackups();
+
+        public BackupHistoryItem[] GetAutoBackups()
+        {
+            List<BackupHistoryItem> items = new List<BackupHistoryItem>();
+            for (int i = 0; i < History.Count; i++)
+            {
+                if (History[i].Schedule.IsNotEmpty)
+                {
+                    items.Add(History[i]);
+                }
+            }
+            return items.ToArray();
+        }
+
+        public Settings AutoLoadHistory()
+        {
+            if (File.Exists(UserHistoryFile))
+            {
+                ParseHistory(UserHistoryFile);
+                return this;
+            }
+            if (File.Exists(AppHistoryFile))
+            {
+                ParseHistory(AppHistoryFile);
+            }
+            return this;
+        }
+
+        private void ParseHistory(string file)
+        {
+            if (new FileInfo(file).Length <= 0)
+            {
+                return;
+            }
+            var root = Fostrian.Parse(file);
+            for (int i = 0; i < root.Size; i++)
+            {
+                History.Add(ParseHistoryNode(root[i]));
+            }
+        }
+
+        private BackupHistoryItem ParseHistoryNode(Fostrian.FostrianNode node)
+        {
+            BackupHistoryItem backup = new BackupHistoryItem();
+            backup.Schema.Name = node.DataAsString;
+            for (int i = 0; i < node.Size; i++)
+            {
+                try
+                {
+                    if (node[i].Type == Fostrian.NodeType.FFF) { continue; }
+                    switch (node[i].Name.ToLowerInvariant())
+                    {
+                        case "dir":
+                            backup.BackupDir = node[i].DataAsString;
+                            break;
+
+                        case "status":
+                            backup.Status = (BackupStatus)node[i].DataAsInt16;
+                            break;
+
+                        case "date":
+                            backup.Date = DateTime.FromBinary(node[i].DataAsInt64);
+                            break;
+
+                        case "schedule":
+                            backup.Schema.Schedule = ScheduleInfo.FromBinary(node[i].DataAsInt64);
+                            break;
+
+                        case "schema":
+                            ParseHistoryItemSchema(backup, node[i]);
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+            return backup;
+        }
+
+        private void ParseHistoryItemSchema(BackupHistoryItem backup, Fostrian.FostrianNode root)
+        {
+            for (int i = 0; i < root.Size; i++)
+            {
+                for (int si = 0; si < BackupActionTypes.Length; i++)
+                {
+                    if (string.Equals(BackupActionTypes[si].Name, root[i].DataAsString, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        backup.Schema.Actions.Add(BackupActionTypes[si].ImportAction(root[i]));
+                        break;
+                    }
+                }
+            }
+        }
+
+        public BackupHistoryItem GetLatestBackup()
+        {
             if (History.Count > 0)
             {
                 History = History.OrderBy(it => it.Date).ToList();
@@ -66,7 +161,7 @@ namespace Blueway
             }
             else
             {
-                return new BackupHistoryItem("New Backup" /* TODO: Add translation here */, new BackupSchema(new List<BackupAction>()), DateTime.Now, BackupStatus.Planned, DateTime.Now, new TimeSpan(0), Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+                return null;
             }
         }
 
@@ -78,7 +173,17 @@ namespace Blueway
             {
                 Directory.CreateDirectory(UserFiles);
             }
-            BackupActionTypes = new BackupActionType[] { new BackupActions.BackupDirectoryActionType() }; // TODO: add defaults
+            BackupActionTypes = new BackupActionType[]
+            {
+#if DEBUG
+                new BackupActions.BackupTestActionType(),
+#endif
+                new BackupActions.BackupDirectoryActionType(),
+                new BackupActions.BackupCreateFileActionType(),
+                new BackupActions.BackupExecuteCommandActionType(),
+                new BackupActions.BackupSelfContainedActionType(),
+                new BackupActions.BackupUploadDownloadActionType()
+            };
         }
 
         public Settings AutoLoadConfig()
@@ -95,10 +200,44 @@ namespace Blueway
             return this;
         }
 
-        public Settings Save(string saveTo = null)
+        public Settings SaveHistory(string saveTo = null)
         {
             var root = Fostrian.GenerateRootNode(false);
-            root.Encoding = System.Text.Encoding.Unicode;
+            root.Encoding = Encoding.Unicode;
+            root.StartByte = 0x02;
+            root.EndByte = 0x03;
+            for (int i = 0; i < History.Count; i++)
+            {
+                var item = History[i];
+                var node = root.Add(item.Name);
+                node.Type = Fostrian.NodeType.FVF;
+                node.Add(new Fostrian.FostrianNode(item.BackupDir, "dir"));
+                node.Add(new Fostrian.FostrianNode((short)item.Status, "status"));
+                node.Add(new Fostrian.FostrianNode(item.Date.ToBinary(), "date"));
+                node.Add(new Fostrian.FostrianNode(item.Schedule.ToBinary(), "schedule"));
+                var schema = node.Add(new Fostrian.FostrianNode(true, "schema"));
+                for (int ai = 0; ai < item.Schema.Actions.Count; ai++)
+                {
+                    var action = item.Schema.Actions[ai];
+                    var actionNode = schema.Add(action.Name);
+                    for (int si = 0; si < BackupActionTypes.Length; si++)
+                    {
+                        if (string.Equals(BackupActionTypes[si].Name, action.Name, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            BackupActionTypes[si].ExportAction(actionNode, action);
+                            break;
+                        }
+                    }
+                }
+            }
+            Fostrian.Recreate(root, saveTo ?? UserHistoryFile);
+            return this;
+        }
+
+        public Settings SaveConfig(string saveTo = null)
+        {
+            var root = Fostrian.GenerateRootNode(false);
+            root.Encoding = Encoding.Unicode;
             root.StartByte = 0x02;
             root.EndByte = 0x03;
             root.Add(new Fostrian.FostrianNode(EnableExtensions, "enable-extensions"));
@@ -206,7 +345,6 @@ namespace Blueway
                 }
                 catch (Exception) { continue; }
             }
-            themes = null;
             return this;
         }
 

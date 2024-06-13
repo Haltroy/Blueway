@@ -56,7 +56,8 @@ public class MainWindowViewModel : ViewModelBase
             {
                 return new Avalonia.Controls.WindowTransparencyLevel[]
                 {
-                    Avalonia.Controls.WindowTransparencyLevel.Mica ,
+                    // yeah no thanks w11 your mica sucks ass
+                    //Avalonia.Controls.WindowTransparencyLevel.Mica ,
                     Avalonia.Controls.WindowTransparencyLevel.AcrylicBlur ,
                     Avalonia.Controls.WindowTransparencyLevel.Blur,
                     Avalonia.Controls.WindowTransparencyLevel.Transparent,

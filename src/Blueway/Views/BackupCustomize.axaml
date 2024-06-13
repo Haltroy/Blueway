@@ -7,39 +7,41 @@
 	<StackPanel Margin="5 5 5 5" Orientation="Vertical" Spacing="5">
 		<TextBlock Text="Custom backup..." />
 		<Separator />
-		<ScrollViewer>
-			<StackPanel Orientation="Vertical" Spacing="5">
-				<DockPanel LastChildFill="True">
-					<TextBlock DockPanel.Dock="Left" Margin="0 0 5 0" Text="Name:" VerticalAlignment="Center" />
-					<TextBox Name="SchemaName" />
-				</DockPanel>
-				<DockPanel LastChildFill="True">
-					<TextBlock DockPanel.Dock="Left" Margin="0 0 5 0" Text="Backup to:" VerticalAlignment="Center" />
-					<Button Click="BrowseFolder" DockPanel.Dock="Right">
-						<TextBlock Text="Browse..." />
-					</Button>
-					<TextBox Name="BackupTo" />
-				</DockPanel>
-				<StackPanel Orientation="Horizontal" Spacing="5">
-					<TextBlock Text="Schedule:" VerticalAlignment="Center" />
-					<ToggleSwitch Name="Schedule" OnContent="" OffContent="" />
-				</StackPanel>
-				<Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*" IsVisible="{Binding #Schedule.IsChecked}" IsEnabled="{Binding #Schedule.IsChecked}">
-					<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 5 0" Text="Reoccurance:" />
-					<TextBox Grid.Row="0" Grid.Column="1" Text="00:00:00 00/00/0000" />
-					<TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Format: HH:MM:SS DD/MM/YYYY" FontWeight="Light" FontStyle="Italic" />
-				</Grid>
-				<StackPanel Orientation="Vertical">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock VerticalAlignment="Center" Text="Actions..." />
-						<Button Name="AddNew" Click="OpenFlyout">
-							<TextBlock Text="Add new..." />
-						</Button>
-					</StackPanel>
-					<Separator />
-					<StackPanel Orientation="Vertical" Spacing="5" Name="ActionList" />
-				</StackPanel>
+		<StackPanel Orientation="Vertical" Spacing="5">
+			<DockPanel LastChildFill="True">
+				<TextBlock DockPanel.Dock="Left" Margin="0 0 5 0" Text="Name:" VerticalAlignment="Center" />
+				<TextBox Name="SchemaName" PropertyChanged="SchemaName_PropertyChanged" />
+			</DockPanel>
+			<DockPanel LastChildFill="True">
+				<TextBlock DockPanel.Dock="Left" Margin="0 0 5 0" Text="Backup to:" VerticalAlignment="Center" />
+				<Button Click="BrowseFolder" DockPanel.Dock="Right">
+					<TextBlock Text="Browse..." />
+				</Button>
+				<TextBox Name="BackupTo" PropertyChanged="BackupTo_PropertyChanged" />
+			</DockPanel>
+			<StackPanel Orientation="Horizontal" Spacing="5">
+				<TextBlock Text="Schedule:" VerticalAlignment="Center" />
+				<ToggleSwitch Name="Schedule" OnContent="" OffContent="" />
 			</StackPanel>
-		</ScrollViewer>
+			<Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*" IsVisible="{Binding #Schedule.IsChecked}" IsEnabled="{Binding #Schedule.IsChecked}">
+				<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 5 0" Text="Occurrence:" />
+				<TextBox Grid.Row="0" Grid.Column="1" Text="00:00:00 00/00/0000" Name="Occurrence" PropertyChanged="Occurrence_PropertyChanged" />
+				<TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Format: HH:MM:SS:MS DD/MM/YYYY" FontWeight="Light" FontStyle="Italic" />
+			</Grid>
+			<StackPanel Orientation="Vertical">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock VerticalAlignment="Center" Text="Actions..." />
+					<Button Name="AddNew" Click="OpenFlyout">
+						<TextBlock Text="Add new..." />
+					</Button>
+				</StackPanel>
+				<Separator />
+				<StackPanel Orientation="Vertical" Spacing="5" Name="ActionList" />
+			</StackPanel>
+
+			<Button HorizontalAlignment="Right" Click="StartBackup" VerticalAlignment="Bottom">
+				<TextBlock Text="Start" />
+			</Button>
+		</StackPanel>
 	</StackPanel>
 </UserControl>

@@ -19,17 +19,15 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop != null)
         {
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainWindowViewModel(),
-            }.ShowTrayIcon().AsBackground(desktop.Args.Contains("--background") || desktop.Args.Contains("--bg"));
-            desktop.Exit += (s, e) => { if (desktop.MainWindow is MainWindow mw && mw.DataContext is ViewModelBase vmb) { vmb.Settings.Save(); } };
+            }.ShowTrayIcon().AsBackground(desktop.Args != null && (desktop.Args.Contains("--background") || desktop.Args.Contains("--bg")));
+            desktop.Exit += (s, e) => { if (desktop.MainWindow is MainWindow mw && mw.DataContext is ViewModelBase vmb) { vmb.Settings.SaveConfig().SaveHistory(); } };
         }
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    public static Action<int> Shutdown;
 }

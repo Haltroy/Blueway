@@ -9,10 +9,10 @@ namespace Blueway.Views;
 
 public partial class MainWindow : Window
 {
-    private Subject<bool> BackAvailable = new Subject<bool>();
-    private Subject<bool> ForwardAvailable = new Subject<bool>();
-    private Subject<bool> CancelAvailable = new Subject<bool>();
-    private Subject<bool> OKAvailable = new Subject<bool>();
+    private readonly Subject<bool> BackAvailable = new();
+    private readonly Subject<bool> ForwardAvailable = new();
+    private readonly Subject<bool> CancelAvailable = new();
+    private readonly Subject<bool> OKAvailable = new();
 
     public Home HomeScreen;
 
@@ -20,13 +20,15 @@ public partial class MainWindow : Window
 
     public MainWindow ShowTrayIcon()
     {
-        TrayIcon tray = new();
-        tray.Icon = this.Icon;
+        TrayIcon tray = new()
+        {
+            Icon = Icon
+        };
         tray.Clicked += (s, e) => { if (IsVisible) { Hide(); } else { Show(); } };
 
         NativeMenu menu = new();
 
-        // TODO: Add more and add translations
+        // TODO: Add translations
 
         NativeMenuItem showMW = new() { Header = "Show" };
         showMW.Click += (s, e) => Show();
@@ -46,16 +48,25 @@ public partial class MainWindow : Window
         showSettings.Click += (s, e) => { Show(); OpenSettings(s, new Avalonia.Interactivity.RoutedEventArgs()); };
         menu.Items.Add(showSettings);
 
+        NativeMenuItem showAbout = new() { Header = "About" };
+        showAbout.Click += (s, e) => { Show(); OpenAbout(s, new Avalonia.Interactivity.RoutedEventArgs()); };
+        menu.Items.Add(showAbout);
+
         menu.Items.Add(new NativeMenuItemSeparator());
 
         NativeMenuItem exit = new() { Header = "Exit" };
         exit.Click += (s, e) =>
         {
+            if (DataContext is ViewModels.ViewModelBase vmb)
+            {
+                vmb.Settings.SaveConfig();
+                vmb.Settings.SaveHistory();
+            }
             tray.IsVisible = false;
             tray.Dispose();
             allowClose = true;
             Close();
-            if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+            if (Avalonia.Application.Current != null && Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
                 lifetime.TryShutdown(0);
             }
@@ -82,6 +93,7 @@ public partial class MainWindow : Window
         {
             if (theme is not null) { vmb.Settings.CurrentTheme = theme; }
             DataContext = null;
+            InvalidateVisual();
             DataContext = vmb;
             InvalidateVisual();
             for (int i = 0; i < ContentCarousel.Items.Count; i++)
@@ -89,6 +101,7 @@ public partial class MainWindow : Window
                 if (ContentCarousel.Items[i] is Control control)
                 {
                     control.DataContext = null;
+                    InvalidateVisual();
                     control.DataContext = vmb;
                     control.InvalidateVisual();
                 }
@@ -143,14 +156,8 @@ public partial class MainWindow : Window
 
     public void SwitchTo(AUC? uc = null)
     {
-        if (HomeScreen is null)
-        {
-            HomeScreen = new Home();
-        }
-        if (uc is null)
-        {
-            uc = HomeScreen;
-        }
+        HomeScreen ??= new Home();
+        uc ??= HomeScreen;
 
         // TODO: Get page titles from languages
         PageTitle.Text = uc.Title;
@@ -198,7 +205,9 @@ public partial class MainWindow : Window
         });
     }
 
-    private void ShowAbout(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void ShowAbout(object? sender, Avalonia.Input.PointerPressedEventArgs e) => OpenAbout(sender, e);
+
+    private void OpenAbout(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         SwitchTo(new About());
     }
@@ -242,12 +251,11 @@ public partial class MainWindow : Window
     private void UpdateButtons()
     {
         BackAvailable.OnNext(
-            (OK.IsVisible || Cancel.IsVisible) ? ContentCarousel.SelectedIndex > 0 : false
+            (OK.IsVisible || Cancel.IsVisible) && ContentCarousel.SelectedIndex > 0
         );
         ForwardAvailable.OnNext(
             (OK.IsVisible || Cancel.IsVisible)
-                ? ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount
-                : false
+&& ContentCarousel.SelectedIndex <= ContentCarousel.ItemCount
         );
     }
 

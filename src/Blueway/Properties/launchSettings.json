@@ -2,6 +2,12 @@
   "profiles": {
     "Blueway": {
       "commandName": "Project"
+    },
+    "Blueway (without Avalonia Telemetry)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "AVALONIA_TELEMETRY_OPTOUT": "1"
+      }
     }
   }
 }
